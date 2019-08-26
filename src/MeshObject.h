@@ -10,18 +10,23 @@
 #include <stdarg.h>
 #include <string>
 #include <algorithm>
+#include "TextureObject.h"
 
-class VertexArrayObject {
+class MeshObject {
 public:
-    unsigned int ID;
+    unsigned int VAO_ID;
+    int sizeArray;
+    TextureObject texture;
 
-    VertexArrayObject(const char* objectdataPath, GLenum datatype, GLenum buffermode, GLenum bufferusage, bool enableTextures) {
-        int amountArray = 0;
-        std::string verticesData = readVerticesf(objectdataPath, &amountArray ,enableTextures);
+    MeshObject(const char* objectdataPath, GLenum datatype, GLenum buffermode, GLenum bufferusage, TextureObject _texture) : texture(_texture) {
+        this->texture = _texture;
+        sizeArray = 0;
 
-        std::cout << "array_size: " << amountArray << std::endl;
+        std::string verticesData = readVerticesf(objectdataPath, &sizeArray);
 
-        float vDataf[amountArray];
+        std::cout << "array_size: " << sizeArray << std::endl;
+
+        float vDataf[sizeArray];
 
         std::string delimiter = ",";
         int k = 0;
@@ -36,24 +41,55 @@ public:
         vDataf[k] = stof(verticesData.substr(0, pos));
         std::cout << k << ".Value: " << vDataf[k] << std::endl;
 
-        glGenVertexArrays(1, &ID);
+
+        // takes an ID for the vertex arrays called VAO and generates it
+        glGenVertexArrays(1, &VAO_ID);
+        // takes an ID for the buffers called VBO and EBO and generates them
         glGenBuffers(1, &VBO);
     //    glGenBuffers(1, &EBO);
+        // binding the Vertex Array Object
+        glBindVertexArray(VAO_ID);
 
-        // bind the Vertex Array Object first, then bind and set vertex buffer, and then configure vertex attributes.
-        glBindVertexArray(ID);
+        // assigning a buffer type to VBO, which will let us configure the currently bound buffer (VBO)
+        // by any calls on GL_ARRAY_BUFFER
         glBindBuffer(buffermode, VBO);
+        // copies the previously defined vertex data into the buffer
         glBufferData(buffermode, sizeof(vDataf), vDataf, bufferusage);
 
+        // assigning a buffer type to EBO, which will let us configure the currently bound buffer (EBO)
+        // by any calls on GL_ELEMENT_ARRAY_BUFFER
     //    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        //  copies the previously defined indices data into the buffer
     //    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, bufferusage);
 
+        // telling OpenGL how it should interpret the vertex data
+        // position attribute
         glVertexAttribPointer(0, 3, datatype, GL_FALSE, 5 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
+        // texture mapping attribute
         glVertexAttribPointer(1, 2, datatype, GL_FALSE, 5 * sizeof(float), (void*)(3* sizeof(float)));
         glEnableVertexAttribArray(1);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
+        // unbinding the VAO so there won't happen any accidents of other VAO's getting modified on accident
+        unbindVertexArray();
+    }
+
+    void draw(Shader shader) {
+        unsigned int normalNr   = 1;
+
+        glActiveTexture(GL_TEXTURE0);
+
+        shader.setInt("textObj1", 0);
+        glBindTexture(GL_TEXTURE_2D, texture.ID);
+
+        // start drawing the mesh
+        glBindVertexArray(VAO_ID);
+        glDrawArrays(GL_TRIANGLES, 0, (int)sizeArray/5);
+
+        glBindVertexArray(0);
+
+        glActiveTexture(GL_TEXTURE0);
     }
 
     void unbindVertexArray() {
@@ -61,11 +97,11 @@ public:
     }
 
     void bindVertexArray() {
-        glBindVertexArray(ID);
+        glBindVertexArray(VAO_ID);
     }
 
-    void deallocate() {
-        glDeleteVertexArrays(1, &ID);
+    void deallocateVertexArrays() {
+        glDeleteVertexArrays(1, &VAO_ID);
         glDeleteBuffers(1, &VBO);
     //    glDeleteBuffers(1, &EBO);
     }
@@ -75,7 +111,7 @@ private:
 
     //unsigned int EBO;
 
-    std::string readVerticesf(const char* objectdataPath, int *amountArray, bool enableTextures) {
+    std::string readVerticesf(const char* objectdataPath, int *sizeArray) {
         std::string verticesData;
         std::ifstream verticesFile;
 
@@ -94,10 +130,11 @@ private:
         } catch (std::ifstream::failure e) {
             std::cout << "ERROR::VERTEXARRAYOBJECT::FILE_NOT_SUCCESFULLY_READ" << std::endl;
         }
+        std::cout << "data: " << verticesData << std::endl;
 
         std::string stringData;
 
-        int startPos = 0;
+        size_t startPos = 0;
         std::string kmmDelim = ",";
         std::string smclnDelim = ";";
         std::string nwlnDelim = "\n";
@@ -111,25 +148,14 @@ private:
                 startPos = kmmPos + kmmDelim.length();
                 kmmPos = verticesData.find(kmmDelim, startPos);
             } else {
-                if (enableTextures) {
-                    if (SmclnPos < kmmPos && SmclnPos < nwlnPos) {
-                        stringData += verticesData.substr(startPos, SmclnPos - startPos) + ",";
-                        startPos = SmclnPos + smclnDelim.length();
-                        SmclnPos = verticesData.find(smclnDelim, startPos);
-                    } else {
-                        stringData += verticesData.substr(startPos, nwlnPos - startPos) + ",";
-                        startPos = nwlnPos + nwlnDelim.length();
-                        nwlnPos = verticesData.find(nwlnDelim, startPos);
-                    }
+                if (SmclnPos < kmmPos && SmclnPos < nwlnPos) {
+                    stringData += verticesData.substr(startPos, SmclnPos - startPos) + ",";
+                    startPos = SmclnPos + smclnDelim.length();
+                    SmclnPos = verticesData.find(smclnDelim, startPos);
                 } else {
-                    if (nwlnPos != std::string::npos) {
-                        stringData += verticesData.substr(startPos, SmclnPos - startPos) + ",";
-                        startPos = nwlnPos + smclnDelim.length();
-                        SmclnPos = verticesData.find(smclnDelim, startPos);
-                    } else {
-                        stringData += verticesData.substr(startPos, SmclnPos - startPos) + ",";
-                        kmmPos = verticesData.find(smclnDelim, startPos);
-                    }
+                    stringData += verticesData.substr(startPos, nwlnPos - startPos) + ",";
+                    startPos = nwlnPos + nwlnDelim.length();
+                    nwlnPos = verticesData.find(nwlnDelim, startPos);
                 }
             }
             if(kmmPos == std::string::npos) {
@@ -137,11 +163,12 @@ private:
             }
         }
 
-        *amountArray = std::count(stringData.begin(), stringData.end(), ',') + 1;
+        *sizeArray = std::count(stringData.begin(), stringData.end(), ',') + 1;
 
         std::cout << ",: " << kmmPos << std::endl;
         std::cout << ";: " << SmclnPos << std::endl;
         std::cout << "newline: " << nwlnPos << std::endl;
+        std::cout << "startPos: " << startPos << std::endl;
 
         std::cout << stringData << std::endl;
 
