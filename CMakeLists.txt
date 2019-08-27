@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 
 set(SOURCE_FILES src/main.cpp src/shader_vf.h src/main.h src/libs/glad.c src/MeshObject.h src/libs/stb_image.h
-        src/libs/stb_imageloader.cpp src/TextureObject.h src/globalVar.cpp src/globalVar.h src/camera.h)
+        src/libs/stb_imageloader.cpp src/TextureObject.h src/globalVar.cpp src/globalVar.h src/camera.h src/Unit.cpp src/Unit.h)
 
 add_executable(OpenBroodCraft ${SOURCE_FILES})
 

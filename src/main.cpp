@@ -43,7 +43,10 @@ int main(void) {
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetScrollCallback(window, scroll_callback);
+
+    //---- uncomment to enable camera pitch and yaw for mousemovement ------
     //glfwSetCursorPosCallback(window, mouse_callback);
+    //----------------------------------------------------------------------
 
     // tell GLFW to capture our mouse
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR);
@@ -102,7 +105,7 @@ int main(void) {
 
     // uncomment this call to draw in wireframe polygons.
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
+    std::cout <<  ((180-(180/5*2))/3) * sizeof(glm::vec3) << std::endl;
     // render loop
     while (!glfwWindowShouldClose(window))
     {
@@ -136,11 +139,21 @@ int main(void) {
         testTriShader.setMatrix4fv("projection", 1, projection);
 
         cubeVAOtest.draw(testTriShader);
-        for (unsigned int i = 0; i < 28; i++)
-        {
-            model = glm::translate(model, cubePositions[i]);
+
+
+        int tiles = 16;
+
+        model = glm::translate(model, glm::vec3(-364.0f, 364.0f, -300.0f));
+        for (unsigned int i = 0; i < tiles; i++) {
+            model = glm::translate(model, glm::vec3(64.0f, 0.0f, 0.0f));
             testTriShader.setMatrix4fv("model", 1, model);
             tileVAOtest.draw(testTriShader);
+            for (unsigned int k = 0; k < tiles; k++) {
+                glm::vec3 temp = i%2 == 0 ? glm::vec3(0.0f, -64.0f, 0.0f) : glm::vec3(0.0f, 64.0f, 0.0f);
+                model = glm::translate(model, temp);
+                testTriShader.setMatrix4fv("model", 1, model);
+                tileVAOtest.draw(testTriShader);
+            }
         }
 
         /* Swap front and back buffers */

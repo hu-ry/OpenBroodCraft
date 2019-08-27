@@ -3,20 +3,26 @@
 //
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
 #include <fstream>
 #include <iostream>
+#include <vector>
 #include <sstream>
 #include <stdarg.h>
 #include <string>
 #include <algorithm>
+
+#include "shader_vf.h"
 #include "TextureObject.h"
 
 class MeshObject {
 public:
     unsigned int VAO_ID;
+
+    std::vector<glm::vec3> vertices;
     int sizeArray;
-    TextureObject texture;
+
 
     MeshObject(const char* objectdataPath, GLenum datatype, GLenum buffermode, GLenum bufferusage, TextureObject _texture) : texture(_texture) {
         this->texture = _texture;
@@ -40,6 +46,17 @@ public:
         }
         vDataf[k] = stof(verticesData.substr(0, pos));
         std::cout << k << ".Value: " << vDataf[k] << std::endl;
+
+        vertices.reserve( ((sizeArray-(sizeArray/5*2))/3) * sizeof(glm::vec3));
+        int j = 0;
+        for(int i=1; i<=sizeArray; i++) {
+            float temp = (i % 5) / 3;
+            if(temp <= 1 && temp != 0) {
+                vertices[j] = glm::vec3(vDataf[i-1], vDataf[i], vDataf[i+1]);
+                i += 3;
+                j++;
+            }
+        }
 
 
         // takes an ID for the vertex arrays called VAO and generates it
@@ -109,7 +126,7 @@ public:
 private:
     unsigned int VBO;
 
-    //unsigned int EBO;
+    TextureObject texture;
 
     std::string readVerticesf(const char* objectdataPath, int *sizeArray) {
         std::string verticesData;
