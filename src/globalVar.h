@@ -27,4 +27,12 @@ extern float WORLD_SPACE_Z;
 extern float deltaTime;
 extern float lastFrame;
 
+struct MouseStatus {
+    bool firstMs;
+    double msPosX;
+    double msPosY;
+    int button;
+    int action;
+};
+
 #endif //TESTINGOPENGL_GLOBALVAR_H

@@ -39,13 +39,19 @@ int main(void) {
         return -1;
     }
 
+    //initialize Mouse Input
+    initMouse(&Camera, &lastX, &lastY, &firstMouse);
+
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetScrollCallback(window, scroll_callback);
 
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
+
+    glfwSetCursorPosCallback(window, cursor_position_callback);
     //---- uncomment to enable camera pitch and yaw for mousemovement ------
-    //glfwSetCursorPosCallback(window, mouse_callback);
+    //glfwSetCursorPosCallback(window, msInput.mouse_callback);
     //----------------------------------------------------------------------
 
     // tell GLFW to capture our mouse

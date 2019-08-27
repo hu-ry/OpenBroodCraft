@@ -8,11 +8,11 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "globalVar.h"
 #include "camera.h"
+#include "input/mouse.h"
+
 
 #ifndef OPENBROODCRAFT_MAIN_H
 #define OPENBROODCRAFT_MAIN_H
-
-glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
 
 // camera
 Camera Camera(INITIAL_CAM_POSITION);
@@ -48,42 +48,19 @@ void processInput(GLFWwindow *window) {
     }
     if(glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
 
-        std::cout << vec.x << vec.y << vec.z << std::endl;
     }
     if(glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
 
-        std::cout << vec.x << vec.y << vec.z << std::endl;
     }
     if(glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
 
-        std::cout << vec.x << vec.y << vec.z << std::endl;
     }
     if(glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
 
-        std::cout << vec.x << vec.y << vec.z << std::endl;
     }
 }
 
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
-    Camera.ProcessScrollInput(yoffset);
-    std::cout << "ScrollOffset_Y: " << yoffset << std::endl;
-}
 
-void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
-    if (firstMouse) {
-        lastX = xpos;
-        lastY = ypos;
-        firstMouse = false;
-    }
-
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-    lastX = xpos;
-    lastY = ypos;
-
-    Camera.ProcessMouseMovement(xoffset, yoffset);
-}
 
 
 #endif //OPENBROODCRAFT_MAIN_H
