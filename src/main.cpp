@@ -1,7 +1,6 @@
 //
 // Created by RH on 16.08.2019.
 //
-#include <iostream>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -10,13 +9,15 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <iostream>
+
 #include "libs/stb_image.h"
 #include "shader_vf.h"
 #include "main.h"
 #include "TextureObject.h"
-#include "MeshObject.h"
 #include "globalVar.h"
-
+#include "game/map_tiles.h"
+#include "game/Unit.h"
 
 
 int main(void) {
@@ -65,49 +66,25 @@ int main(void) {
 
     // configure global opengl state
     glEnable(GL_DEPTH_TEST);
-
-    glm::vec3 cubePositions[] = {
-            glm::vec3( 0.0f,  0.0f, -300.0f),
-            glm::vec3( 64.0f, 0.0f, 0.0f),
-            glm::vec3(0.0f, 64.0f, 0.0f),
-            glm::vec3(-64.0f, 0.0f, 0.0f),
-            glm::vec3(-64.0f, 0.0f, 0.0f),
-            glm::vec3(0.0f, -64.0f, 0.0f),
-            glm::vec3(0.0f, -64.0f, 0.0f),
-            glm::vec3( 64.0f,  0.0f, 0.0f),
-            glm::vec3( 64.0f,  0.0f, 0.0f),
-            glm::vec3( 64.0f, 0.0f, 0.0f),
-            glm::vec3(0.0f, 64.0f, 0.0f),
-            glm::vec3(0.0f, 64.0f, 0.0f),
-            glm::vec3(-64.0f, 0.0f, 0.0f),
-            glm::vec3(-64.0f, 0.0f, 0.0f),
-            glm::vec3(-64.0f, 0.0f, 0.0f),
-            glm::vec3(-64.0f, 0.0f, 0.0f),
-            glm::vec3(0.0f, -64.0f, 0.0f),
-            glm::vec3(0.0f, -64.0f, 0.0f),
-            glm::vec3(0.0f, -64.0f, 0.0f),
-            glm::vec3( 64.0f, 0.0f, 0.0f),
-            glm::vec3( 64.0f, 0.0f, 0.0f),
-            glm::vec3( 64.0f, 0.0f, 0.0f),
-            glm::vec3( 64.0f, 0.0f, 0.0f),
-            glm::vec3(0.0f, -64.0f, 0.0f),
-            glm::vec3(-64.0f, 0.0f, 0.0f),
-            glm::vec3(-64.0f, 0.0f, 0.0f),
-            glm::vec3(-64.0f, 0.0f, 0.0f),
-            glm::vec3(-64.0f, 0.0f, 0.0f)
-    };
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // setting up our vertex and fragment shader via Shader class
     Shader testTriShader("../shaders/testTriShader.vesh", "../shaders/testTriShader.frsh");
 
     TextureObject textObj1 = TextureObject("../textures/FeelsWeirdMan.png");
-    TextureObject textObj2 = TextureObject("../textures/tileTex.png");
+    TextureObject textObj2 = TextureObject("../textures/ownTile.png");
+    TextureObject marine_texture = TextureObject("../textures/marine_new.png");
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
-    MeshObject cubeVAOtest("../objectmodels/testCube.vmo", GL_FLOAT, GL_ARRAY_BUFFER, GL_STATIC_DRAW, textObj1);
+    //MeshObject cubeVAOtest("../objectmodels/testCube.vmo", GL_FLOAT, GL_ARRAY_BUFFER, GL_STATIC_DRAW, textObj1);
 
-    MeshObject tileVAOtest("../objectmodels/testTile.vmo", GL_FLOAT, GL_ARRAY_BUFFER, GL_STATIC_DRAW, textObj2);
+    MeshObject maptileVAOtest("../objectmodels/testTile.vmo", GL_FLOAT, GL_ARRAY_BUFFER, GL_STATIC_DRAW, textObj2);
+    MeshObject marinetileVAO("../objectmodels/marineTile.vmo", GL_FLOAT, GL_ARRAY_BUFFER, GL_STATIC_DRAW, marine_texture);
 
+    Unit marine = Unit(&marinetileVAO, UNIT_MARINE, glm::vec3(0.0f, 0.0f, 1.0f), 1);
+
+    map_tiles map(64, 64);
 
     // uncomment this call to draw in wireframe polygons.
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -135,7 +112,7 @@ int main(void) {
         glm::mat4 projection    = glm::mat4(1.0f);
 
     //    model = glm::rotate(model, glm::radians(20.0f), glm::vec3(1.0f, 0.3f, 0.5f));
-        view  = Camera.GetViewMatrix();
+        view = Camera.GetViewMatrix();
         projection = glm::ortho(-FROSTUM_WIDTH/FROSTUM_ZOOM, FROSTUM_WIDTH/FROSTUM_ZOOM, -FROSTUM_HEIGHT/FROSTUM_ZOOM,
                 FROSTUM_HEIGHT/FROSTUM_ZOOM, FROSTUM_NEAR, FROSTUM_FAR);
     //    projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -144,23 +121,15 @@ int main(void) {
         testTriShader.setMatrix4fv("view", 1, view);
         testTriShader.setMatrix4fv("projection", 1, projection);
 
-        cubeVAOtest.draw(testTriShader);
+
+        map.draw_map(&model, &testTriShader, &maptileVAOtest);
 
 
-        int tiles = 16;
 
-        model = glm::translate(model, glm::vec3(-364.0f, 364.0f, -300.0f));
-        for (unsigned int i = 0; i < tiles; i++) {
-            model = glm::translate(model, glm::vec3(64.0f, 0.0f, 0.0f));
-            testTriShader.setMatrix4fv("model", 1, model);
-            tileVAOtest.draw(testTriShader);
-            for (unsigned int k = 0; k < tiles; k++) {
-                glm::vec3 temp = i%2 == 0 ? glm::vec3(0.0f, -64.0f, 0.0f) : glm::vec3(0.0f, 64.0f, 0.0f);
-                model = glm::translate(model, temp);
-                testTriShader.setMatrix4fv("model", 1, model);
-                tileVAOtest.draw(testTriShader);
-            }
-        }
+        marinetileVAO.draw(testTriShader);
+
+
+
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -169,8 +138,8 @@ int main(void) {
     }
 
     // deallocate all buffers
-    cubeVAOtest.deallocateVertexArrays();
-    tileVAOtest.deallocateVertexArrays();
+    //cubeVAOtest.deallocateVertexArrays();
+    maptileVAOtest.deallocateVertexArrays();
 
     glfwTerminate();
     return 0;

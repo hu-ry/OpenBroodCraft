@@ -5,6 +5,8 @@
 #ifndef TESTINGOPENGL_GLOBALVAR_H
 #define TESTINGOPENGL_GLOBALVAR_H
 
+#include <glad/glad.h>
+
 #include <glm/vec3.hpp>
 
 extern unsigned int SCR_WIDTH;
@@ -20,12 +22,14 @@ extern float FROSTUM_ZOOM;
 extern glm::vec3 INITIAL_CAM_POSITION;
 
 extern float WORLD_SPACE_SCALE;
-extern float WORLD_SPACE_X;
+extern float WORLD_BORDER_X;
 extern float WORLD_SPACE_Y;
-extern float WORLD_SPACE_Z;
+extern float WORLD_BORDER_Z;
 
 extern float deltaTime;
 extern float lastFrame;
+
+extern float TILE_SIZE;
 
 struct MouseStatus {
     bool firstMs;

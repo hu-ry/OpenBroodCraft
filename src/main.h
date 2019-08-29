@@ -1,6 +1,10 @@
 //
 // Created by RH on 16.08.2019.
 //
+
+#ifndef OPENBROODCRAFT_MAIN_H
+#define OPENBROODCRAFT_MAIN_H
+
 #include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
@@ -9,10 +13,6 @@
 #include "globalVar.h"
 #include "camera.h"
 #include "input/mouse.h"
-
-
-#ifndef OPENBROODCRAFT_MAIN_H
-#define OPENBROODCRAFT_MAIN_H
 
 // camera
 Camera Camera(INITIAL_CAM_POSITION);

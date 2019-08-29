@@ -5,8 +5,7 @@
 #ifndef OPENBROODCRAFT_UNIT_H
 #define OPENBROODCRAFT_UNIT_H
 
-
-#include "MeshObject.h"
+#include "../headerInclude.h"
 
 enum UnitType {
     UNIT_NONE = -1,
@@ -23,18 +22,26 @@ class Unit {
 public:
     unsigned int ID;
     UnitType Type_ID;
+    glm::vec3 WorldSpacePos;
     unsigned int MovementSpeed;
+    bool selected;
 
-    Unit(MeshObject* mesh, UnitType type, unsigned int speed);
+    float offsetX;
+    float offsetY;
 
-    Unit(MeshObject* mesh, UnitType type);
+    Unit(MeshObject* mesh, UnitType type, glm::vec3 WorldSpacePos, unsigned int speed);
 
+    Unit(MeshObject* mesh, UnitType type, glm::vec3 WorldSpacePos);
+
+    void drawAction();
+
+    void recieveInput(float posX, float posY);// in game class implementieren und dann aufrufen lassen und damit durch
+    // alle Units iterieren.
 private:
     static unsigned int Current_ID;
 
     MeshObject* Mesh;
 };
 
-unsigned int Unit::Current_ID;
 
 #endif //OPENBROODCRAFT_UNIT_H

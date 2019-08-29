@@ -5,7 +5,6 @@
 #ifndef OPENBROODCRAFT_TEXTUREOBJECT_H
 #define OPENBROODCRAFT_TEXTUREOBJECT_H
 
-#include <glad/glad.h>
 #include <iostream>
 
 #include "libs/stb_image.h"

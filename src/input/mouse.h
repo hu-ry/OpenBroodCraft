@@ -5,6 +5,7 @@
 #ifndef OPENBROODCRAFT_MOUSE_H
 #define OPENBROODCRAFT_MOUSE_H
 
+#include <glad/glad.h>
 
 #include <GLFW/glfw3.h>
 #include <glm/vec4.hpp>
