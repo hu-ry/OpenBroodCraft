@@ -21,4 +21,6 @@ float WORLD_BORDER_Z        = 0.0f;
 float deltaTime = 0.0f;	// Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
 
+int MAX_AMOUNT_UNITS = 100;
+
 float TILE_SIZE = 64.0f;

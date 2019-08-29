@@ -7,24 +7,36 @@
 unsigned int Unit::Current_ID;
 
 Unit::Unit(MeshObject* mesh, UnitType type, glm::vec3 WorldSpacePos, unsigned int speed) : ID(Current_ID++){
-    Mesh = mesh;
-    Type_ID = type;
+    this->Mesh = mesh;
+    this->Type_ID = type;
     this->WorldSpacePos = WorldSpacePos;
-    MovementSpeed = speed;
-    selected = true;
+    this->MovementSpeed = speed;
+    this->selected = true;
 
-    offsetX = (float)fabs(mesh->vertices[0].x);
-    offsetY = (float)fabs(mesh->vertices[0].y);
+    this->offsetX = (float)fabs(mesh->vertices[0].x);
+    this->offsetY = (float)fabs(mesh->vertices[0].y);
 }
 
 Unit::Unit(MeshObject* mesh, UnitType type, glm::vec3 WorldSpacePos) : ID(Current_ID++), MovementSpeed(1) {
-    Mesh = mesh;
-    Type_ID = type;
+    this->Mesh = mesh;
+    this->Type_ID = type;
     this->WorldSpacePos = WorldSpacePos;
-    selected = true;
+    this->selected = true;
 
-    offsetX = (float)fabs(mesh->vertices[0].x);
-    offsetY = (float)fabs(mesh->vertices[0].y);
+    this->offsetX = (float)fabs(mesh->vertices[0].x);
+    this->offsetY = (float)fabs(mesh->vertices[0].y);
+}
+
+Unit::Unit() {
+
+}
+
+void Unit::setPosition(glm::vec3 newPos) {
+    this->WorldSpacePos = newPos;
+}
+
+glm::vec3 Unit::getPosition() {
+    return this->WorldSpacePos;
 }
 
 

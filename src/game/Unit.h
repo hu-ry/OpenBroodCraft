@@ -22,7 +22,6 @@ class Unit {
 public:
     unsigned int ID;
     UnitType Type_ID;
-    glm::vec3 WorldSpacePos;
     unsigned int MovementSpeed;
     bool selected;
 
@@ -33,13 +32,17 @@ public:
 
     Unit(MeshObject* mesh, UnitType type, glm::vec3 WorldSpacePos);
 
+    Unit();
+
+    void setPosition(glm::vec3 newPos);
+    glm::vec3 getPosition();
     void drawAction();
 
     void recieveInput(float posX, float posY);// in game class implementieren und dann aufrufen lassen und damit durch
     // alle Units iterieren.
 private:
     static unsigned int Current_ID;
-
+    glm::vec3 WorldSpacePos;
     MeshObject* Mesh;
 };
 

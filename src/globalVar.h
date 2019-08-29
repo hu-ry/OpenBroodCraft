@@ -29,6 +29,8 @@ extern float WORLD_BORDER_Z;
 extern float deltaTime;
 extern float lastFrame;
 
+extern int MAX_AMOUNT_UNITS;
+
 extern float TILE_SIZE;
 
 struct MouseStatus {
