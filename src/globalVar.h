@@ -23,7 +23,7 @@ extern glm::vec3 INITIAL_CAM_POSITION;
 
 extern float WORLD_SPACE_SCALE;
 extern float WORLD_BORDER_X;
-extern float WORLD_SPACE_Y;
+extern float WORLD_BORDER_Y;
 extern float WORLD_BORDER_Z;
 
 extern float deltaTime;
@@ -33,6 +33,15 @@ extern int MAX_AMOUNT_UNITS;
 
 extern float TILE_SIZE;
 
+enum ProgMode {
+    PROG_NONE = -1,
+    PROG_MENU,
+    PROG_GAME,
+    PROG_PAUSE
+};
+
+extern ProgMode PROGRAM_MODE;
+
 struct MouseStatus {
     bool firstMs;
     double msPosX;
@@ -40,5 +49,8 @@ struct MouseStatus {
     int button;
     int action;
 };
+
+typedef void (* INPUTgameengine)(float, float);
+
 
 #endif //TESTINGOPENGL_GLOBALVAR_H

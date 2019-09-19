@@ -7,7 +7,7 @@
 unsigned int Unit::Current_ID;
 
 Unit::Unit(MeshObject* mesh, UnitType type, glm::vec3 WorldSpacePos, unsigned int speed) : ID(Current_ID++){
-    this->Mesh = mesh;
+    this->Mesh = *mesh;
     this->Type_ID = type;
     this->WorldSpacePos = WorldSpacePos;
     this->MovementSpeed = speed;
@@ -18,7 +18,7 @@ Unit::Unit(MeshObject* mesh, UnitType type, glm::vec3 WorldSpacePos, unsigned in
 }
 
 Unit::Unit(MeshObject* mesh, UnitType type, glm::vec3 WorldSpacePos) : ID(Current_ID++), MovementSpeed(1) {
-    this->Mesh = mesh;
+    this->Mesh = *mesh;
     this->Type_ID = type;
     this->WorldSpacePos = WorldSpacePos;
     this->selected = true;
@@ -31,19 +31,19 @@ Unit::Unit() {
 
 }
 
-void Unit::setPosition(glm::vec3 newPos) {
+inline void Unit::setPosition(glm::vec3 newPos) {
     this->WorldSpacePos = newPos;
 }
 
-glm::vec3 Unit::getPosition() {
+inline glm::vec3 Unit::getPosition() {
     return this->WorldSpacePos;
 }
 
 
-void Unit::drawAction() {
-
+void Unit::drawAction(Shader* _shader) {
+    this->Mesh.draw(*_shader);
 }
 
-void Unit::recieveInput(float posX, float posY) {
-
+void Unit::free_mesh() {
+    this->Mesh.deallocateVertexArrays();
 }

@@ -23,8 +23,9 @@ public:
     std::vector<glm::vec3> vertices;
     int sizeArray;
 
+    MeshObject() = default;
 
-    MeshObject(const char* objectdataPath, GLenum datatype, GLenum buffermode, GLenum bufferusage, TextureObject _texture) : texture(_texture) {
+    MeshObject(const char* objectdataPath, GLenum datatype, GLenum buffermode, GLenum bufferusage, TextureObject _texture) {
         this->texture = _texture;
         sizeArray = 0;
 

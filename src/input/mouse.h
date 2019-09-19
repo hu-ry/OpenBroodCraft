@@ -15,7 +15,11 @@
 #include "../globalVar.h"
 
 
-void initMouse(Camera* __Camera, float* __lastX ,float* __lastY, bool* __firstMouse);
+void initMouse(Camera* __Camera);
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+
+void processInput(GLFWwindow *window);
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
@@ -25,6 +29,6 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 
-
+void inputGameEngine(float x, float y);
 
 #endif //OPENBROODCRAFT_MOUSE_H

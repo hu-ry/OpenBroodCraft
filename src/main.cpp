@@ -12,13 +12,11 @@
 #include <iostream>
 
 #include "libs/stb_image.h"
-#include "shader_vf.h"
 #include "main.h"
-#include "TextureObject.h"
 #include "globalVar.h"
-#include "game/map_tiles.h"
-#include "game/Unit.h"
 
+
+class Camera Camera(INITIAL_CAM_POSITION);
 
 int main(void) {
     GLFWwindow* window;
@@ -39,9 +37,11 @@ int main(void) {
         glfwTerminate();
         return -1;
     }
+    //Create GameEngine
+    GameEngine gameprog;
 
     //initialize Mouse Input
-    initMouse(&Camera, &lastX, &lastY, &firstMouse);
+    initMouse(&Camera);
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
@@ -64,31 +64,9 @@ int main(void) {
         return -1;
     }
 
-    // configure global opengl state
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // initialize GameEngine with all the OpenGL stuff
+    gameprog.Init(inputGameEngine);
 
-    // setting up our vertex and fragment shader via Shader class
-    Shader testTriShader("../shaders/testTriShader.vesh", "../shaders/testTriShader.frsh");
-
-    TextureObject textObj1 = TextureObject("../textures/FeelsWeirdMan.png");
-    TextureObject textObj2 = TextureObject("../textures/ownTile.png");
-    TextureObject marine_texture = TextureObject("../textures/marine_new.png");
-
-    // set up vertex data (and buffer(s)) and configure vertex attributes
-    //MeshObject cubeVAOtest("../objectmodels/testCube.vmo", GL_FLOAT, GL_ARRAY_BUFFER, GL_STATIC_DRAW, textObj1);
-
-    MeshObject maptileVAOtest("../objectmodels/testTile.vmo", GL_FLOAT, GL_ARRAY_BUFFER, GL_STATIC_DRAW, textObj2);
-    MeshObject marinetileVAO("../objectmodels/marineTile.vmo", GL_FLOAT, GL_ARRAY_BUFFER, GL_STATIC_DRAW, marine_texture);
-
-    Unit marine = Unit(&marinetileVAO, UNIT_MARINE, glm::vec3(0.0f, 0.0f, 1.0f), 1);
-
-    map_tiles map(64, 64);
-
-    // uncomment this call to draw in wireframe polygons.
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    std::cout <<  ((180-(180/5*2))/3) * sizeof(glm::vec3) << std::endl;
     // render loop
     while (!glfwWindowShouldClose(window))
     {
@@ -100,34 +78,7 @@ int main(void) {
         processInput(window);
 
         /* render happens here */
-        glClearColor(0.2f, 0.5f, 0.6f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        // draw our first triangle
-        testTriShader.use();
-
-        // make sure to initialize matrix to identity matrix first
-        glm::mat4 model         = glm::mat4(1.0f);
-        glm::mat4 view          = glm::mat4(1.0f);
-        glm::mat4 projection    = glm::mat4(1.0f);
-
-    //    model = glm::rotate(model, glm::radians(20.0f), glm::vec3(1.0f, 0.3f, 0.5f));
-        view = Camera.GetViewMatrix();
-        projection = glm::ortho(-FROSTUM_WIDTH/FROSTUM_ZOOM, FROSTUM_WIDTH/FROSTUM_ZOOM, -FROSTUM_HEIGHT/FROSTUM_ZOOM,
-                FROSTUM_HEIGHT/FROSTUM_ZOOM, FROSTUM_NEAR, FROSTUM_FAR);
-    //    projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-
-        testTriShader.setMatrix4fv("model", 1, model);
-        testTriShader.setMatrix4fv("view", 1, view);
-        testTriShader.setMatrix4fv("projection", 1, projection);
-
-
-        map.draw_map(&model, &testTriShader, &maptileVAOtest);
-
-
-
-        marinetileVAO.draw(testTriShader);
-
+        gameprog.Execute();
 
 
 
@@ -138,9 +89,9 @@ int main(void) {
     }
 
     // deallocate all buffers
-    //cubeVAOtest.deallocateVertexArrays();
-    maptileVAOtest.deallocateVertexArrays();
+    gameprog.free();
 
     glfwTerminate();
     return 0;
 }
+

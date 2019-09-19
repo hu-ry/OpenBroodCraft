@@ -6,19 +6,13 @@
 
 MouseStatus msStatus;
 Camera* _Camera;
-float* _lastX;
-float* _lastY;
-bool* _firstMouse;
 
 float relative_world_msPosX;
 float relative_world_msPosY;
 
 
-void initMouse(Camera* __Camera, float* __lastX ,float* __lastY, bool* __firstMouse) {
+void initMouse(Camera* __Camera) {
     _Camera = __Camera;
-    _lastX = __lastX;
-    _lastY = __lastY;
-    _firstMouse = __firstMouse;
     msStatus.firstMs = true;
     msStatus.msPosX = 0.0f;
     msStatus.msPosY = 0.0f;
@@ -28,26 +22,50 @@ void initMouse(Camera* __Camera, float* __lastX ,float* __lastY, bool* __firstMo
     relative_world_msPosY = INITIAL_CAM_POSITION.y + ((float)msStatus.msPosY-((float)SCR_HEIGHT/2));
 }
 
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+    /* Telling OpenGL the size of the rendering window */
+    glViewport(0, 0, width, height);
+    SCR_WIDTH = static_cast<unsigned int>(width);
+    SCR_HEIGHT = static_cast<unsigned int>(height);
+    FROSTUM_WIDTH = SCR_WIDTH;
+    FROSTUM_HEIGHT = SCR_HEIGHT;
+}
+
+void processInput(GLFWwindow *window) {
+    float cameraSpeed = 2.5f * deltaTime;
+    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window, true);
+    }
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+        _Camera->ProcessKeyboard(FORWARD, deltaTime);
+    }
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+        _Camera->ProcessKeyboard(BACKWARD, deltaTime);
+    }
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+        _Camera->ProcessKeyboard(LEFT, deltaTime);
+    }
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+        _Camera->ProcessKeyboard(RIGHT, deltaTime);
+    }
+    if(glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+        inputGameEngine((float)msStatus.msPosX, (float)msStatus.msPosY);
+    }
+    if(glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
+
+    }
+    if(glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+
+    }
+    if(glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
+
+    }
+}
+
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
     _Camera->ProcessScrollInput(yoffset);
     std::cout << "ScrollOffset_Y: " << yoffset << std::endl;
 }
-
-//void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
-//    if (*_firstMouse) {
-//        *_lastX = xpos;
-//        *_lastY = ypos;
-//        *_firstMouse = false;
-//    }
-//
-//    float xoffset = xpos - *_lastX;
-//    float yoffset = *_lastY - ypos; // reversed since y-coordinates go from bottom to top
-//
-//    *_lastX = xpos;
-//    *_lastY = ypos;
-//
-//    _Camera->ProcessMouseMovement(xoffset, yoffset);
-//}
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
 
@@ -83,4 +101,8 @@ void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
     std::cout << " MousePosX: " << xpos << " MousePosY: " << ypos << std::endl;
     relative_world_msPosX = _Camera->Position.x + ((float)msStatus.msPosX-((float)SCR_WIDTH/2));
     relative_world_msPosY = _Camera->Position.y + ((float)msStatus.msPosY-((float)SCR_HEIGHT/2));
+}
+
+void inputGameEngine(float x, float y) {
+
 }

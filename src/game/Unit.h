@@ -36,14 +36,14 @@ public:
 
     void setPosition(glm::vec3 newPos);
     glm::vec3 getPosition();
-    void drawAction();
+    void drawAction(Shader* _shader);
 
-    void recieveInput(float posX, float posY);// in game class implementieren und dann aufrufen lassen und damit durch
-    // alle Units iterieren.
+    void free_mesh();
+
 private:
     static unsigned int Current_ID;
     glm::vec3 WorldSpacePos;
-    MeshObject* Mesh;
+    MeshObject Mesh;
 };
 
 

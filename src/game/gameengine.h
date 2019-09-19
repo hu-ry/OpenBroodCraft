@@ -8,6 +8,8 @@
 
 #include "Unit.h"
 #include "../globalVar.h"
+#include "../camera.h"
+#include "map_tiles.h"
 
 class GameEngine {
 public:
@@ -20,13 +22,20 @@ public:
 
 
     int addUnit(Unit unit_to_add);
+    void loadMap(map_tiles map);
 
-    void Init();
+    void recieveInput(float posX, float posY);
+
+    void Init(INPUTgameengine inputFunc);
     void free();
 
 private:
     int Current_Unit = 0;
+    map_tiles Current_Map;
 
+    Shader TriangleShader;
+
+    INPUTgameengine ioFunc;
 };
 
 

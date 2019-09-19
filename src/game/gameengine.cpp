@@ -3,31 +3,96 @@
 //
 
 #include "gameengine.h"
+#include "../main.h"
 
 
+GameEngine::GameEngine() : TriangleShader() {
 
+    //TODO: Write some useful stuff in here pls
 
-
-GameEngine::GameEngine() {
 
 }
 
+void GameEngine::Init(INPUTgameengine inputFunc) {
+    this->ioFunc = inputFunc;
+
+    // configure global opengl state
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    // setting up our vertex and fragment shader via Shader class
+    this->TriangleShader = Shader("../shaders/testTriShader.vesh", "../shaders/testTriShader.frsh");
+
+    TextureObject textObj2 = TextureObject("../textures/ownTile.png");
+    TextureObject marine_texture = TextureObject("../textures/marine_new.png");
+
+    // set up vertex data (and buffer(s)) and configure vertex attributes
+    MeshObject maptileVAOtest("../objectmodels/testTile.vmo", GL_FLOAT, GL_ARRAY_BUFFER, GL_STATIC_DRAW, textObj2);
+    MeshObject marinetileVAO("../objectmodels/marineTile.vmo", GL_FLOAT, GL_ARRAY_BUFFER, GL_STATIC_DRAW, marine_texture);
+
+    this->addUnit(Unit(&marinetileVAO, UNIT_MARINE, glm::vec3(0.0f, 0.0f, 1.0f), 1));
+
+    map_tiles map(64, 64, maptileVAOtest);
+    this->loadMap(map);
+
+    // uncomment this call to draw in wireframe polygons.
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+}
+
 void GameEngine::Execute() {
+    /* render happens here */
+    glClearColor(0.2f, 0.5f, 0.6f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // draw our first triangle
+    TriangleShader.use();
+
+    // make sure to initialize matrix to identity matrix first
+    glm::mat4 model         = glm::mat4(1.0f);
+    glm::mat4 view          = glm::mat4(1.0f);
+    glm::mat4 projection    = glm::mat4(1.0f);
+
+    //    model = glm::rotate(model, glm::radians(20.0f), glm::vec3(1.0f, 0.3f, 0.5f));
+    view = Camera.GetViewMatrix();
+    projection = glm::ortho(-FROSTUM_WIDTH/FROSTUM_ZOOM, FROSTUM_WIDTH/FROSTUM_ZOOM, -FROSTUM_HEIGHT/FROSTUM_ZOOM,
+                            FROSTUM_HEIGHT/FROSTUM_ZOOM, FROSTUM_NEAR, FROSTUM_FAR);
+
+
+    TriangleShader.setMatrix4fv("model", 1, model);
+    TriangleShader.setMatrix4fv("view", 1, view);
+    TriangleShader.setMatrix4fv("projection", 1, projection);
+
+    Current_Map.draw_map(&model, &TriangleShader);
 
     if(this->Current_Unit != 0) {
 
-        for(int i=0;i<=this->Current_Unit;i++) {
-            this->ActiveUnits[i].drawAction();
+        for(int i=0;i<this->Current_Unit;i++) {
+            this->ActiveUnits[i].drawAction(&TriangleShader);
         }
     }
 }
 
-int GameEngine::addUnit(Unit unit_to_add) {
+inline int GameEngine::addUnit(Unit unit_to_add) {
     this->ActiveUnits[this->Current_Unit] = unit_to_add;
     this->Current_Unit++;
     return this->Current_Unit;
 }
 
+void GameEngine::recieveInput(float posX, float posY) {
+    this->ioFunc(posX, posY);
+}
+
+void GameEngine::loadMap(map_tiles map) {
+    this->Current_Map = map;
+}
+
 void GameEngine::free() {
+    if(this->Current_Unit != 0) {
+        for(int i=0;i<=this->Current_Unit;i++) {
+            this->ActiveUnits[i].free_mesh();
+        }
+    }
+    this->Current_Map.mesh.deallocateVertexArrays();
     delete[] this->ActiveUnits;
 }

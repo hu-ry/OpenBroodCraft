@@ -16,6 +16,8 @@ public:
     unsigned int ID;
     const char* texturePath;
 
+    TextureObject() = default;
+
     TextureObject(const char* texturePath) {
         this->texturePath = texturePath;
 
@@ -49,7 +51,7 @@ public:
 
             stbi_set_flip_vertically_on_load(true);
         } else {
-            std::cout << "Failed to load texture" << std::endl;
+            std::cout << "Failed to load texture" << this->texturePath << std::endl;
         }
         stbi_image_free(data);
     }
