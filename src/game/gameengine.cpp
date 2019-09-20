@@ -13,8 +13,7 @@ GameEngine::GameEngine() : TriangleShader() {
 
 }
 
-void GameEngine::Init(INPUTgameengine inputFunc) {
-    this->ioFunc = inputFunc;
+void GameEngine::Init() {
 
     // configure global opengl state
     glEnable(GL_DEPTH_TEST);
@@ -31,7 +30,7 @@ void GameEngine::Init(INPUTgameengine inputFunc) {
     MeshObject maptileVAOtest("../objectmodels/testTile.vmo", GL_FLOAT, GL_ARRAY_BUFFER, GL_STATIC_DRAW, textObj2);
     MeshObject marinetileVAO("../objectmodels/marineTile.vmo", GL_FLOAT, GL_ARRAY_BUFFER, GL_STATIC_DRAW, marine_texture);
 
-    this->addUnit(Unit(&marinetileVAO, UNIT_MARINE, glm::vec3(0.0f, 0.0f, 1.0f), 1));
+    this->addUnit(Unit(&marinetileVAO, UNIT_MARINE, glm::vec3(0.0f, 0.0f, 1.0f), Command(), 2));
 
     map_tiles map(64, 64, maptileVAOtest);
     this->loadMap(map);
@@ -49,9 +48,9 @@ void GameEngine::Execute() {
     TriangleShader.use();
 
     // make sure to initialize matrix to identity matrix first
-    glm::mat4 model         = glm::mat4(1.0f);
-    glm::mat4 view          = glm::mat4(1.0f);
-    glm::mat4 projection    = glm::mat4(1.0f);
+    model         = glm::mat4(1.0f);
+    view          = glm::mat4(1.0f);
+    projection    = glm::mat4(1.0f);
 
     //    model = glm::rotate(model, glm::radians(20.0f), glm::vec3(1.0f, 0.3f, 0.5f));
     view = Camera.GetViewMatrix();
@@ -68,19 +67,26 @@ void GameEngine::Execute() {
     if(this->Current_Unit != 0) {
 
         for(int i=0;i<this->Current_Unit;i++) {
+            this->ActiveUnits[i].Run();
+            model = glm::translate(model ,this->ActiveUnits[i].translate);
+            this->TriangleShader.setMatrix4fv("model", 1, model);
             this->ActiveUnits[i].drawAction(&TriangleShader);
         }
     }
 }
 
-inline int GameEngine::addUnit(Unit unit_to_add) {
+int GameEngine::addUnit(Unit unit_to_add) {
     this->ActiveUnits[this->Current_Unit] = unit_to_add;
     this->Current_Unit++;
     return this->Current_Unit;
 }
 
 void GameEngine::recieveInput(float posX, float posY) {
-    this->ioFunc(posX, posY);
+
+}
+
+void GameEngine::testMoveFirstUnit(float posX, float posY) {
+    this->ActiveUnits[0].issueCmd(COMMAND_MOVE, glm::vec2(posX, posY));
 }
 
 void GameEngine::loadMap(map_tiles map) {

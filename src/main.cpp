@@ -41,7 +41,7 @@ int main(void) {
     GameEngine gameprog;
 
     //initialize Mouse Input
-    initMouse(&Camera);
+    initMouse(&Camera, &gameprog);
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
@@ -65,7 +65,7 @@ int main(void) {
     }
 
     // initialize GameEngine with all the OpenGL stuff
-    gameprog.Init(inputGameEngine);
+    gameprog.Init();
 
     // render loop
     while (!glfwWindowShouldClose(window))

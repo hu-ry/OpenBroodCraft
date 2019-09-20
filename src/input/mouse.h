@@ -13,9 +13,10 @@
 #include "../camera.h"
 #include <iostream>
 #include "../globalVar.h"
+#include "../game/gameengine.h"
 
 
-void initMouse(Camera* __Camera);
+void initMouse(Camera* __Camera, GameEngine *gameprog);
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
@@ -28,7 +29,5 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
-
-void inputGameEngine(float x, float y);
 
 #endif //OPENBROODCRAFT_MOUSE_H

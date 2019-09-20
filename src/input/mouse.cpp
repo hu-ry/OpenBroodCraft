@@ -6,14 +6,15 @@
 
 MouseStatus msStatus;
 Camera* _Camera;
+GameEngine* gameProg;
 
 float relative_world_msPosX;
 float relative_world_msPosY;
 
 
-void initMouse(Camera* __Camera) {
+void initMouse(Camera* __Camera, GameEngine *gameprog) {
     _Camera = __Camera;
-    msStatus.firstMs = true;
+    gameProg = gameprog;
     msStatus.msPosX = 0.0f;
     msStatus.msPosY = 0.0f;
     msStatus.button = 0;
@@ -33,6 +34,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 
 void processInput(GLFWwindow *window) {
     float cameraSpeed = 2.5f * deltaTime;
+    //std::cout << "frametime: " << deltaTime << std::endl;
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
     }
@@ -49,7 +51,7 @@ void processInput(GLFWwindow *window) {
         _Camera->ProcessKeyboard(RIGHT, deltaTime);
     }
     if(glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-        inputGameEngine((float)msStatus.msPosX, (float)msStatus.msPosY);
+        gameProg->testMoveFirstUnit(relative_world_msPosX, relative_world_msPosY);
     }
     if(glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
 
@@ -63,7 +65,7 @@ void processInput(GLFWwindow *window) {
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
-    _Camera->ProcessScrollInput(yoffset);
+    //_Camera->ProcessScrollInput(yoffset);
     std::cout << "ScrollOffset_Y: " << yoffset << std::endl;
 }
 
@@ -89,20 +91,10 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 }
 
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
-    if (msStatus.firstMs) {
-        msStatus.msPosX = xpos;
-        msStatus.msPosY = ypos;
-
-
-        msStatus.firstMs = false;
-    }
     msStatus.msPosX = xpos;
     msStatus.msPosY = ypos;
-    std::cout << " MousePosX: " << xpos << " MousePosY: " << ypos << std::endl;
+
     relative_world_msPosX = _Camera->Position.x + ((float)msStatus.msPosX-((float)SCR_WIDTH/2));
-    relative_world_msPosY = _Camera->Position.y + ((float)msStatus.msPosY-((float)SCR_HEIGHT/2));
-}
-
-void inputGameEngine(float x, float y) {
-
+    relative_world_msPosY = -(_Camera->Position.y + ((float)msStatus.msPosY-((float)SCR_HEIGHT/2)));
+    std::cout << " MousePosX: " << relative_world_msPosX << " MousePosY: " << relative_world_msPosY << std::endl;
 }

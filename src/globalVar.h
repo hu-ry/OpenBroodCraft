@@ -43,12 +43,12 @@ enum ProgMode {
 extern ProgMode PROGRAM_MODE;
 
 struct MouseStatus {
-    bool firstMs;
     double msPosX;
     double msPosY;
     int button;
     int action;
 };
+
 
 typedef void (* INPUTgameengine)(float, float);
 

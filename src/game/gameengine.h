@@ -25,17 +25,21 @@ public:
     void loadMap(map_tiles map);
 
     void recieveInput(float posX, float posY);
+    void testMoveFirstUnit(float posX, float posY);
 
-    void Init(INPUTgameengine inputFunc);
+    void Init();
     void free();
 
 private:
     int Current_Unit = 0;
     map_tiles Current_Map;
 
-    Shader TriangleShader;
 
-    INPUTgameengine ioFunc;
+    glm::mat4 model         = glm::mat4(1.0f);
+    glm::mat4 view          = glm::mat4(1.0f);
+    glm::mat4 projection    = glm::mat4(1.0f);
+
+    Shader TriangleShader;
 };
 
 
