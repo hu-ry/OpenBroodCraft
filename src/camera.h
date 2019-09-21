@@ -113,6 +113,7 @@ public:
     void ProcessScrollInput(double yoffset) {
         if(FROSTUM_ZOOM >= 2 && yoffset < 0) {
             FROSTUM_ZOOM -= 1;
+
         }
         if(FROSTUM_ZOOM <= 5 && yoffset > 0) {
             FROSTUM_ZOOM += 1;

@@ -38,15 +38,15 @@ void Unit::Run() {
 
 void Unit::processCommand() {
     if(CmdOrder.Type > 0) {
-        this->setPosition(this->WorldSpacePos + glm::vec3(this->MoveVec * this->getMovementSpeed(), 0.0f));
-
         if(((WorldSpacePos.x >= CmdOrder.Destination.x && MoveVec.x >= 0)
         || (WorldSpacePos.x <= CmdOrder.Destination.x && MoveVec.x <= 0))
         && ((WorldSpacePos.y >= CmdOrder.Destination.y && MoveVec.y >= 0)
         || (WorldSpacePos.y <= CmdOrder.Destination.y && MoveVec.y <= 0)))
         {
             this->setPosition(glm::vec3(CmdOrder.Destination.x, CmdOrder.Destination.y, WorldSpacePos.z));
-            this->CmdOrder = Command();
+            this->CmdOrder.Type = COMMAND_NONE;
+        } else {
+            this->setPosition(this->WorldSpacePos + glm::vec3(this->MoveVec * this->getMovementSpeed(), 0.0f));
         }
             translate = WorldSpacePos;
     }

@@ -80,7 +80,8 @@ int main(void) {
         /* render happens here */
         gameprog.Execute();
 
-
+        // uncomment for frametimes
+        //std::cout << "frametime: " << deltaTime << std::endl;
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
