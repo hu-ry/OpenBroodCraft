@@ -25,6 +25,7 @@ public:
     void loadMap(map_tiles map);
 
     void recieveInput(float posX, float posY);
+    void moveSelectedUnits(float posX, float posY);
     void testMoveFirstUnit(float posX, float posY);
 
     void Init();

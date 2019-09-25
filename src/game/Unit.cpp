@@ -11,7 +11,7 @@ Unit::Unit(MeshObject* mesh, UnitType type, glm::vec3 WorldSpacePos, Command cmd
     this->Type_ID = type;
     this->WorldSpacePos = WorldSpacePos;
     this->MovementSpeed = speed * (unsigned int)WORLD_SPACE_SCALE;
-    this->selected = true;
+    this->selected = false;
     this->CmdOrder = cmd;
     this->offsetX = (float)fabs(mesh->vertices[0].x);
     this->offsetY = (float)fabs(mesh->vertices[0].y);
@@ -22,7 +22,7 @@ Unit::Unit(MeshObject* mesh, UnitType type, glm::vec3 WorldSpacePos, Command cmd
     this->Mesh = *mesh;
     this->Type_ID = type;
     this->WorldSpacePos = WorldSpacePos;
-    this->selected = true;
+    this->selected = false;
     this->CmdOrder = cmd;
     this->offsetX = (float)fabs(mesh->vertices[0].x);
     this->offsetY = (float)fabs(mesh->vertices[0].y);

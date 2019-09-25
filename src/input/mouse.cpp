@@ -10,15 +10,19 @@ GameEngine* gameProg;
 
 float relative_world_msPosX;
 float relative_world_msPosY;
+float last_relative_world_msPosX;
+float last_relative_world_msPosY;
 
 
 void initMouse(Camera* __Camera, GameEngine *gameprog) {
     _Camera = __Camera;
     gameProg = gameprog;
-    msStatus.msPosX = 0.0f;
-    msStatus.msPosY = 0.0f;
-    msStatus.button = 0;
-    msStatus.action = 0;
+    msStatus.msPosX = 0;
+    msStatus.msPosY = 0;
+    msStatus.msLastPosX = 0;
+    msStatus.msLastPosY = 0;
+    msStatus.button = -1;
+    msStatus.action = -1;
     relative_world_msPosX = INITIAL_CAM_POSITION.x + ((float)msStatus.msPosX-((float)SCR_WIDTH/2));
     relative_world_msPosY = INITIAL_CAM_POSITION.y + ((float)msStatus.msPosY-((float)SCR_HEIGHT/2));
 }
@@ -35,6 +39,9 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 void processInput(GLFWwindow *window) {
     float cameraSpeed = 2.5f * deltaTime;
     //glfwGetCursorPos(window, &msStatus.msPosX, &msStatus.msPosY);
+
+    relative_world_msPosX = _Camera->Position.x + ((float)msStatus.msPosX-((float)SCR_WIDTH/2))/(FROSTUM_ZOOM/2);
+    relative_world_msPosY = _Camera->Position.y + (-((float)msStatus.msPosY-((float)SCR_HEIGHT/2)))/(FROSTUM_ZOOM/2);
 
     //std::cout << "frametime: " << deltaTime << std::endl;
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
@@ -55,9 +62,6 @@ void processInput(GLFWwindow *window) {
     if(glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
         gameProg->testMoveFirstUnit(relative_world_msPosX, relative_world_msPosY);
     }
-    relative_world_msPosX = _Camera->Position.x + ((float)msStatus.msPosX-((float)SCR_WIDTH/2));
-    relative_world_msPosY = _Camera->Position.y + (-((float)msStatus.msPosY-((float)SCR_HEIGHT/2)));
-
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
@@ -66,17 +70,19 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
-
+    msStatus.button = button;
+    msStatus.action = action;
     if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
         //Unit.recieveInput(relative_world_msPosX, relative_world_msPosY);
         std::cout << " button: " << "BUTTON_RIGHT" << " action: " << "PRESS" << std::endl;
     }
     if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE) {
-
+        gameProg->testMoveFirstUnit(relative_world_msPosX, relative_world_msPosY);
         std::cout << " button: " << "BUTTON_RIGHT" << " action: " << "RELEASE" << std::endl;
     }
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-
+        msStatus.msLastPosX = msStatus.msPosX;
+        msStatus.msLastPosY = msStatus.msPosY;
         std::cout << " button: " << "BUTTON_LEFT" << " action: " << "PRESS" << std::endl;
     }
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
@@ -89,8 +95,8 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
     msStatus.msPosX = (float)xpos;
     msStatus.msPosY = (float)ypos;
-    relative_world_msPosX = _Camera->Position.x + ((float)msStatus.msPosX-((float)SCR_WIDTH/2));
-    relative_world_msPosY = _Camera->Position.y + (-((float)msStatus.msPosY-((float)SCR_HEIGHT/2)));
+    relative_world_msPosX = _Camera->Position.x + ((float)msStatus.msPosX-((float)SCR_WIDTH/2))/(FROSTUM_ZOOM/2);
+    relative_world_msPosY = _Camera->Position.y + (-((float)msStatus.msPosY-((float)SCR_HEIGHT/2)))/(FROSTUM_ZOOM/2);
 
     std::cout << " MousePosX: " << relative_world_msPosX << " MousePosY: " << relative_world_msPosY << std::endl;
     std::cout << "MOUSEframetime: " << deltaTime << std::endl;

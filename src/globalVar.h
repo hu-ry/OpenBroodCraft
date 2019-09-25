@@ -43,8 +43,10 @@ enum ProgMode {
 extern ProgMode PROGRAM_MODE;
 
 struct MouseStatus {
-    double msPosX;
-    double msPosY;
+    int msPosX;
+    int msPosY;
+    int msLastPosX;
+    int msLastPosY;
     int button;
     int action;
 };

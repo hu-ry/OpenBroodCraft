@@ -85,6 +85,10 @@ void GameEngine::recieveInput(float posX, float posY) {
 
 }
 
+void GameEngine::moveSelectedUnits(float posX, float posY) {
+
+}
+
 void GameEngine::testMoveFirstUnit(float posX, float posY) {
     this->ActiveUnits[0].issueCmd(COMMAND_MOVE, glm::vec2(posX, posY));
 }
