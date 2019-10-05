@@ -4,31 +4,24 @@
 
 #include "Unit.h"
 
-unsigned int Unit::Current_ID;
 
-Unit::Unit(MeshObject* mesh, UnitType type, glm::vec3 WorldSpacePos, Command cmd, unsigned int speed) : ID(Current_ID++){
-    this->Mesh = *mesh;
-    this->Type_ID = type;
-    this->WorldSpacePos = WorldSpacePos;
+
+Unit::Unit(MeshObject* mesh, UnitType type, glm::vec3 WorldSpacePos, Command cmd, unsigned int speed)
+: TexEntity(mesh, ENTITY_UNIT, WorldSpacePos) {
+
     this->MovementSpeed = speed * (unsigned int)WORLD_SPACE_SCALE;
     this->selected = false;
     this->CmdOrder = cmd;
-    this->offsetX = (float)fabs(mesh->vertices[0].x);
-    this->offsetY = (float)fabs(mesh->vertices[0].y);
 }
 
 Unit::Unit(MeshObject* mesh, UnitType type, glm::vec3 WorldSpacePos, Command cmd)
-: ID(Current_ID++), MovementSpeed(1*(unsigned int)WORLD_SPACE_SCALE) {
-    this->Mesh = *mesh;
-    this->Type_ID = type;
-    this->WorldSpacePos = WorldSpacePos;
+: TexEntity(mesh, ENTITY_UNIT, WorldSpacePos), MovementSpeed(1*(unsigned int)WORLD_SPACE_SCALE) {
+
     this->selected = false;
     this->CmdOrder = cmd;
-    this->offsetX = (float)fabs(mesh->vertices[0].x);
-    this->offsetY = (float)fabs(mesh->vertices[0].y);
 }
 
-Unit::Unit() {
+Unit::Unit() : TexEntity() {
 
 }
 
@@ -57,23 +50,6 @@ void Unit::issueCmd(CommandType type, glm::vec2 dest) {
         this->CmdOrder = Command(COMMAND_MOVE, glm::vec2(getPosition().x, getPosition().y), dest);
         this->MoveVec = glm::normalize(CmdOrder.Destination - CmdOrder.StartPos);
     }
-}
-
-void Unit::setPosition(glm::vec3 newPos) {
-    this->WorldSpacePos = newPos;
-}
-
-glm::vec3 Unit::getPosition() {
-    return this->WorldSpacePos;
-}
-
-
-void Unit::drawAction(Shader* _shader) {
-    this->Mesh.draw(*_shader);
-}
-
-void Unit::free_mesh() {
-    this->Mesh.deallocateVertexArrays();
 }
 
 inline float Unit::getMovementSpeed() {

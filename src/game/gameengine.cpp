@@ -30,7 +30,8 @@ void GameEngine::Init() {
     MeshObject maptileVAOtest("../objectmodels/testTile.vmo", GL_FLOAT, GL_ARRAY_BUFFER, GL_STATIC_DRAW, textObj2);
     MeshObject marinetileVAO("../objectmodels/marineTile.vmo", GL_FLOAT, GL_ARRAY_BUFFER, GL_STATIC_DRAW, marine_texture);
 
-    this->addUnit(Unit(&marinetileVAO, UNIT_MARINE, glm::vec3(0.0f, 0.0f, 1.0f), Command(), 2));
+    this->addUnit(Unit(&marinetileVAO, UNIT_MARINE, glm::vec3(0.0f, 0.0f, 1.0f),
+                       Command(), 2));
 
     map_tiles map(64, 64, maptileVAOtest);
     this->loadMap(map);
@@ -105,4 +106,6 @@ void GameEngine::free() {
     }
     this->Current_Map.mesh.deallocateVertexArrays();
     delete[] this->ActiveUnits;
+    // TexEntities.erase(TexEntities.begin(), TexEntities.end());
+    // TexEntities.erase(TexEntities.end());
 }

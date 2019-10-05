@@ -6,7 +6,6 @@
 #define OPENBROODCRAFT_MAP_TILES_H
 
 
-#include <glm/detail/type_mat.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "../globalVar.h"

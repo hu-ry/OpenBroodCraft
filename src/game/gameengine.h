@@ -6,6 +6,7 @@
 #define OPENBROODCRAFT_GAMEENGINE_H
 
 
+#include <unordered_map>
 #include "Unit.h"
 #include "../globalVar.h"
 #include "../camera.h"
@@ -13,6 +14,7 @@
 
 class GameEngine {
 public:
+    std::unordered_map<EntityID, TexEntity> TexEntities;
     Unit *ActiveUnits = new Unit[MAX_AMOUNT_UNITS];
 
     GameEngine();

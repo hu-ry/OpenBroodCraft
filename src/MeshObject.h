@@ -129,7 +129,7 @@ private:
 
     TextureObject texture;
 
-    std::string readVerticesf(const char* objectdataPath, int *sizeArray) {
+    std::string readVerticesf(const char* objectdataPath, int* sizeArray) {
         std::string verticesData;
         std::ifstream verticesFile;
 

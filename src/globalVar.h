@@ -51,6 +51,7 @@ struct MouseStatus {
     int action;
 };
 
+typedef uint64_t EntityID;
 
 typedef void (* INPUTgameengine)(float, float);
 

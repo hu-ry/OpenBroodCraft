@@ -5,9 +5,10 @@
 #ifndef OPENBROODCRAFT_UNIT_H
 #define OPENBROODCRAFT_UNIT_H
 
-#include "../headerInclude.h"
+
 #include "../globalVar.h"
 #include "command.h"
+#include "TexEntity.h"
 
 enum UnitType {
     UNIT_NONE = -1,
@@ -20,9 +21,8 @@ enum UnitType {
     UNIT_PROBE
 };
 
-class Unit {
+class Unit : public TexEntity {
 public:
-    unsigned int ID;
     UnitType Type_ID;
     unsigned int MovementSpeed;
     bool selected;
@@ -41,25 +41,12 @@ public:
 
     void issueCmd(CommandType type, glm::vec2 dest);
 
-    void drawAction(Shader* _shader);
 
-    void free_mesh();
-
-
-    void setPosition(glm::vec3 newPos);
-    glm::vec3 getPosition();
 private:
-    static unsigned int Current_ID;
-    float offsetX;
-    float offsetY;
-
-    glm::vec3 WorldSpacePos;
 
     Command CmdOrder;
 
     glm::vec2 MoveVec = glm::vec2(0.0f, 0.0f);
-
-    MeshObject Mesh;
 
     inline float getMovementSpeed();
 };
