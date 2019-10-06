@@ -11,6 +11,7 @@
 #include "../globalVar.h"
 #include "../camera.h"
 #include "map_tiles.h"
+#include "kernelStore.h"
 
 class GameEngine {
 public:
@@ -29,22 +30,26 @@ public:
 
     void recieveInput(float posX, float posY);
     void moveSelectedUnits(float posX, float posY);
-    void selectBoxing(int startPosX, int startPosY, int endPosX, int endPosY);
+    void selectBoxing(float startPosX, float startPosY, float endPosX, float endPosY);
     void testMoveFirstUnit(float posX, float posY);
 
     void Init();
     void free();
 
 private:
+    KernelStore GameData;
+
     int Current_Unit = 0;
     map_tiles Current_Map;
-
 
     glm::mat4 model         = glm::mat4(1.0f);
     glm::mat4 view          = glm::mat4(1.0f);
     glm::mat4 projection    = glm::mat4(1.0f);
 
     Shader TriangleShader;
+    Shader GeometryShader;
+
+    MeshObject BoxSelectionVAO;
 };
 
 

@@ -1,0 +1,24 @@
+#version 330 core
+layout (points) in;
+layout (line_strip, max_vertices = 5) out;
+
+in vec2 endPos;
+
+void build_box_selection(vec4 position) {
+    gl_Position = position; // 1:start point
+    EmitVertex();
+    gl_Position = position + vec4(endPos.x, 0.0f, 0.0f, 0.0f); // 2
+    EmitVertex();
+    gl_Position = position + vec4(endPos.x,  endPos.y, 0.0f, 0.0f); // 3:mouse point
+    EmitVertex();
+    gl_Position = position + vec4(0.0f, endPos.y, 0.0f, 0.0f); // 4
+    EmitVertex();
+    gl_Position = position; // 5:end point(start)
+
+    EmitVertex();
+    EndPrimitive();
+}
+
+void main() {
+    build_box_selection(gl_in[0].gl_Position);
+}

@@ -93,6 +93,27 @@ public:
         unbindVertexArray();
     }
 
+    MeshObject(GLenum buffermode, GLenum bufferusage) {
+        // takes an ID for the vertex arrays called VAO and generates it
+        glGenVertexArrays(1, &VAO_ID);
+        // takes an ID for the buffers called VBO and EBO and generates them
+        glGenBuffers(1, &VBO);
+        // binding the Vertex Array Object
+        glBindVertexArray(VAO_ID);
+
+        float points[] = {0.0f, 0.0f, 0.0f};
+
+        glBindBuffer(buffermode, VBO);
+        // copies the previously defined vertex data into the buffer
+        glBufferData(buffermode, sizeof(points), points, bufferusage);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
+
+        // unbinding the VAO so there won't happen any accidents of other VAO's getting modified on accident
+        unbindVertexArray();
+    }
+
     void draw(Shader shader) {
         unsigned int normalNr   = 1;
 
@@ -108,6 +129,13 @@ public:
         glBindVertexArray(0);
 
         glActiveTexture(GL_TEXTURE0);
+    }
+
+    void drawGeoBox(Shader shader) {
+        glBindVertexArray(VAO_ID);
+        glDrawArrays(GL_POINTS, 0, 1);
+        std::cout << "drawbox" << std::endl;
+        glBindVertexArray(0);
     }
 
     void unbindVertexArray() {

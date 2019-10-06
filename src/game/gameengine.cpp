@@ -6,10 +6,14 @@
 #include "../main.h"
 
 
-GameEngine::GameEngine() : TriangleShader() {
+GameEngine::GameEngine() : TriangleShader(), GeometryShader() {
 
     //TODO: Write some useful stuff in here pls
-
+    this->GameData = KernelStore{
+        GameControlFlags{false, false,false, false},
+                                  Square{glm::vec2(-0.5f,-0.5f),glm::vec2(0.5f,0.5f)},
+                                  false,
+                                  1};
 
 }
 
@@ -21,13 +25,17 @@ void GameEngine::Init() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // setting up our vertex and fragment shader via Shader class
-    this->TriangleShader = Shader("../shaders/testTriShader.vesh", "../shaders/testTriShader.frsh");
+    this->TriangleShader = Shader("../shaders/testTriShader.vesh",
+            "../shaders/testTriShader.frsh");
+    //this->GeometryShader = Shader("../shaders/testGeoShader.vesh",
+    //        "../shaders/testGeoShader.frsh", "../shaders/testGeoShader.gesh");
 
     TextureObject maptile_texture = TextureObject("../textures/ownTile.png");
     TextureObject marine_texture = TextureObject("../textures/marine_new.png");
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     MeshObject maptileVAOtest("../objectmodels/testTile.vmo", GL_FLOAT, GL_ARRAY_BUFFER, GL_STATIC_DRAW, maptile_texture);
+    this->BoxSelectionVAO = MeshObject(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
     MeshObject marinetileVAO("../objectmodels/marineTile.vmo", GL_FLOAT, GL_ARRAY_BUFFER, GL_STATIC_DRAW, marine_texture);
 
     this->addUnit(Unit(&marinetileVAO, UNIT_MARINE, glm::vec3(0.0f, 0.0f, 1.0f),
@@ -45,7 +53,7 @@ void GameEngine::Execute() {
     glClearColor(0.2f, 0.5f, 0.6f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // draw our first triangle
+    // activating our shaders
     TriangleShader.use();
 
     // make sure to initialize matrix to identity matrix first
@@ -75,14 +83,27 @@ void GameEngine::Execute() {
             this->TriangleShader.setMatrix4fv("model", 1, model);
             this->ActiveUnits[i].drawAction(&TriangleShader);
         }
+        model = glm::mat4(1.0f);
     }
 
     // drawing UI Effects
-
+    if(this->GameData.flags.inBoxSelection) {
+        GeometryShader.use();
+        GeometryShader.setMatrix4fv("model", 1, model);
+        GeometryShader.setMatrix4fv("view", 1, view);
+        GeometryShader.setMatrix4fv("projection", 1, projection);
+        this->GeometryShader.set2Float("boxPos",
+                GameData.BoxSelectPos.startPos.x, GameData.BoxSelectPos.startPos.y);
+        this->GeometryShader.set2Float("mousePosOffset",
+                GameData.BoxSelectPos.endPos.x, GameData.BoxSelectPos.endPos.y);
+        this->BoxSelectionVAO.drawGeoBox(GeometryShader);
+    }
 }
 
 void GameEngine::Process_Gamelogic() {
 
+
+    this->GameData.flags.abortBoxSelection = true;
 }
 
 int GameEngine::addUnit(Unit unit_to_add) {
@@ -99,8 +120,12 @@ void GameEngine::moveSelectedUnits(float posX, float posY) {
 
 }
 
-void GameEngine::selectBoxing(int startPosX, int startPosY, int endPosX, int endPosY) {
+void GameEngine::selectBoxing(float startPosX, float startPosY, float endPosX, float endPosY) {
+    this->GameData.flags.abortBoxSelection = false;
+    this->GameData.flags.inBoxSelection = true;
 
+    this->GameData.BoxSelectPos.startPos = glm::vec2(startPosX, startPosY);
+    this->GameData.BoxSelectPos.endPos = glm::vec2(endPosX, endPosY);
 }
 
 void GameEngine::testMoveFirstUnit(float posX, float posY) {
@@ -119,6 +144,7 @@ void GameEngine::free() {
     }
     this->Current_Map.mesh.deallocateVertexArrays();
     delete[] this->ActiveUnits;
+    this->BoxSelectionVAO.deallocateVertexArrays();
     // TexEntities.erase(TexEntities.begin(), TexEntities.end());
     // TexEntities.erase(TexEntities.end());
 }
