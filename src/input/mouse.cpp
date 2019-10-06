@@ -62,6 +62,9 @@ void processInput(GLFWwindow *window) {
     if(glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
         gameProg->testMoveFirstUnit(relative_world_msPosX, relative_world_msPosY);
     }
+    if(msStatus.button == GLFW_MOUSE_BUTTON_LEFT && msStatus.action == GLFW_PRESS) {
+        gameProg->selectBoxing(msStatus.msLastPosX, msStatus.msLastPosY, msStatus.msPosX, msStatus.msPosY);
+    }
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {

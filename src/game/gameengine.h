@@ -19,6 +19,7 @@ public:
 
     GameEngine();
 
+    void Process_Gamelogic();
 
     void Execute();
 
@@ -28,6 +29,7 @@ public:
 
     void recieveInput(float posX, float posY);
     void moveSelectedUnits(float posX, float posY);
+    void selectBoxing(int startPosX, int startPosY, int endPosX, int endPosY);
     void testMoveFirstUnit(float posX, float posY);
 
     void Init();

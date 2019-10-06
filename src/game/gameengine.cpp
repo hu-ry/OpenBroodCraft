@@ -23,11 +23,11 @@ void GameEngine::Init() {
     // setting up our vertex and fragment shader via Shader class
     this->TriangleShader = Shader("../shaders/testTriShader.vesh", "../shaders/testTriShader.frsh");
 
-    TextureObject textObj2 = TextureObject("../textures/ownTile.png");
+    TextureObject maptile_texture = TextureObject("../textures/ownTile.png");
     TextureObject marine_texture = TextureObject("../textures/marine_new.png");
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
-    MeshObject maptileVAOtest("../objectmodels/testTile.vmo", GL_FLOAT, GL_ARRAY_BUFFER, GL_STATIC_DRAW, textObj2);
+    MeshObject maptileVAOtest("../objectmodels/testTile.vmo", GL_FLOAT, GL_ARRAY_BUFFER, GL_STATIC_DRAW, maptile_texture);
     MeshObject marinetileVAO("../objectmodels/marineTile.vmo", GL_FLOAT, GL_ARRAY_BUFFER, GL_STATIC_DRAW, marine_texture);
 
     this->addUnit(Unit(&marinetileVAO, UNIT_MARINE, glm::vec3(0.0f, 0.0f, 1.0f),
@@ -63,8 +63,10 @@ void GameEngine::Execute() {
     TriangleShader.setMatrix4fv("view", 1, view);
     TriangleShader.setMatrix4fv("projection", 1, projection);
 
+    // drawing the map
     Current_Map.draw_map(&model, &TriangleShader);
 
+    // drawing all TexEntities
     if(this->Current_Unit != 0) {
 
         for(int i=0;i<this->Current_Unit;i++) {
@@ -74,6 +76,13 @@ void GameEngine::Execute() {
             this->ActiveUnits[i].drawAction(&TriangleShader);
         }
     }
+
+    // drawing UI Effects
+
+}
+
+void GameEngine::Process_Gamelogic() {
+
 }
 
 int GameEngine::addUnit(Unit unit_to_add) {
@@ -87,6 +96,10 @@ void GameEngine::recieveInput(float posX, float posY) {
 }
 
 void GameEngine::moveSelectedUnits(float posX, float posY) {
+
+}
+
+void GameEngine::selectBoxing(int startPosX, int startPosY, int endPosX, int endPosY) {
 
 }
 

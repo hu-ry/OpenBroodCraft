@@ -18,6 +18,10 @@ float WORLD_BORDER_X        = 0.0f;
 float WORLD_BORDER_Y        = 100;
 float WORLD_BORDER_Z        = 0.0f;
 
+float SELECTBOX_DEPTH_Z     = 800.0f;
+
+float UI_DEPTH_Z            = 900.0f;
+
 float deltaTime = 0.0f;	// Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
 

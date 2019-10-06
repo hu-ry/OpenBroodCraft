@@ -77,6 +77,9 @@ int main(void) {
         /* input goes here */
         processInput(window);
 
+        /* processing game logic happens here */
+        gameprog.Process_Gamelogic();
+
         /* render happens here */
         gameprog.Execute();
 

@@ -26,6 +26,10 @@ extern float WORLD_BORDER_X;
 extern float WORLD_BORDER_Y;
 extern float WORLD_BORDER_Z;
 
+extern float SELECTBOX_DEPTH_Z;
+
+extern float UI_DEPTH_Z;
+
 extern float deltaTime;
 extern float lastFrame;
 
