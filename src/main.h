@@ -12,7 +12,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "globalVar.h"
 #include "camera.h"
-#include "input/mouse.h"
+#include "input/input.h"
 #include "game/gameengine.h"
 
 // camera

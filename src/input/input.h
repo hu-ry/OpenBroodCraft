@@ -2,8 +2,8 @@
 // Created by Guest on 27/08/2019.
 //
 
-#ifndef OPENBROODCRAFT_MOUSE_H
-#define OPENBROODCRAFT_MOUSE_H
+#ifndef OPENBROODCRAFT_INPUT_H
+#define OPENBROODCRAFT_INPUT_H
 
 #include <glad/glad.h>
 
@@ -30,4 +30,4 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 
-#endif //OPENBROODCRAFT_MOUSE_H
+#endif //OPENBROODCRAFT_INPUT_H

@@ -1,7 +1,7 @@
 //
 // Created by Guest on 27/08/2019.
 //
-#include "mouse.h"
+#include "input.h"
 #include "../game/Unit.h"
 
 MouseStatus msStatus;
