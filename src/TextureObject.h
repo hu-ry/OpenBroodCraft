@@ -5,8 +5,11 @@
 #ifndef OPENBROODCRAFT_TEXTUREOBJECT_H
 #define OPENBROODCRAFT_TEXTUREOBJECT_H
 
-#include <iostream>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
+#include <iostream>
 #include "libs/stb_image.h"
 
 

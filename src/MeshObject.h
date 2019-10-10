@@ -1,9 +1,6 @@
 //
 // Created by RH on 17.08.2019.
 //
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
 
 #include <fstream>
 #include <iostream>
