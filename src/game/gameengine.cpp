@@ -27,16 +27,16 @@ void GameEngine::Init() {
     // setting up our vertex and fragment shader via Shader class
     this->TriangleShader = Shader("../shaders/testTriShader.vesh",
             "../shaders/testTriShader.frsh");
-    //this->GeometryShader = Shader("../shaders/testGeoShader.vesh",
-    //        "../shaders/testGeoShader.frsh", "../shaders/testGeoShader.gesh");
+    this->GeometryShader = Shader("../shaders/testGeoShader.vesh",
+            "../shaders/testGeoShader.frsh", "../shaders/testGeoShader.gesh");
 
-    TextureObject maptile_texture = TextureObject("../textures/ownTile.png");
-    TextureObject marine_texture = TextureObject("../textures/marine_new.png");
+    std::vector<TextureObject> maptile_texture = {TextureObject("../textures/ownTile.png")};
+    std::vector<TextureObject> marine_texture = {TextureObject("../textures/marine_new.png")};
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
-    MeshObject maptileVAOtest("../objectmodels/testTile.vmo", GL_FLOAT, GL_ARRAY_BUFFER, GL_STATIC_DRAW, maptile_texture);
+    MeshObject maptileVAOtest("../objectmodels/testTile.vmo", GL_FLOAT, GL_STATIC_DRAW, maptile_texture);
     this->BoxSelectionVAO = MeshObject(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
-    MeshObject marinetileVAO("../objectmodels/marineTile.vmo", GL_FLOAT, GL_ARRAY_BUFFER, GL_STATIC_DRAW, marine_texture);
+    MeshObject marinetileVAO("../objectmodels/marineTile.vmo", GL_FLOAT, GL_STATIC_DRAW, marine_texture);
 
     this->addUnit(Unit(&marinetileVAO, UNIT_MARINE, glm::vec3(0.0f, 0.0f, 1.0f),
                        Command(), 2));
@@ -53,38 +53,33 @@ void GameEngine::Execute() {
     glClearColor(0.2f, 0.5f, 0.6f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // activating our shaders
-    TriangleShader.use();
-
-    // make sure to initialize matrix to identity matrix first
-    model         = glm::mat4(1.0f);
-    view          = glm::mat4(1.0f);
-    projection    = glm::mat4(1.0f);
-
-    //    model = glm::rotate(model, glm::radians(20.0f), glm::vec3(1.0f, 0.3f, 0.5f));
-    view = Camera.GetViewMatrix();
-    projection = glm::ortho(-FROSTUM_WIDTH/FROSTUM_ZOOM, FROSTUM_WIDTH/FROSTUM_ZOOM, -FROSTUM_HEIGHT/FROSTUM_ZOOM,
+        //    model = glm::rotate(model, glm::radians(20.0f), glm::vec3(1.0f, 0.3f, 0.5f));
+    view          = Camera.GetViewMatrix();
+    projection    = glm::ortho(-FROSTUM_WIDTH/FROSTUM_ZOOM, FROSTUM_WIDTH/FROSTUM_ZOOM, -FROSTUM_HEIGHT/FROSTUM_ZOOM,
                             FROSTUM_HEIGHT/FROSTUM_ZOOM, FROSTUM_NEAR, FROSTUM_FAR);
+    model         = glm::mat4(1.0f);
 
-
+    // activating our Triangle shader
+    TriangleShader.use();
     TriangleShader.setMatrix4fv("model", 1, model);
     TriangleShader.setMatrix4fv("view", 1, view);
     TriangleShader.setMatrix4fv("projection", 1, projection);
-
+ 
     // drawing the map
     Current_Map.draw_map(&model, &TriangleShader);
-
+ 
     // drawing all TexEntities
     if(this->Current_Unit != 0) {
-
+ 
         for(int i=0;i<this->Current_Unit;i++) {
             this->ActiveUnits[i].Run();
             model = glm::translate(model ,this->ActiveUnits[i].translate);
             this->TriangleShader.setMatrix4fv("model", 1, model);
             this->ActiveUnits[i].drawAction(&TriangleShader);
+            model = glm::mat4(1.0f);
         }
-        model = glm::mat4(1.0f);
     }
+    model = glm::mat4(1.0f);
 
     // drawing UI Effects
     if(this->GameData.flags.inBoxSelection) {
@@ -97,12 +92,15 @@ void GameEngine::Execute() {
         this->GeometryShader.set2Float("mousePosOffset",
                 GameData.BoxSelectPos.endPos.x, GameData.BoxSelectPos.endPos.y);
         this->BoxSelectionVAO.drawGeoBox(GeometryShader);
+        this->GameData.flags.inBoxSelection = false;
     }
 }
 
 void GameEngine::Process_Gamelogic() {
 
-
+    if(this->GameData.flags.inBoxSelection && this->GameData.flags.abortBoxSelection) {
+        this->GameData.flags.inBoxSelection = false;
+    }
     this->GameData.flags.abortBoxSelection = true;
 }
 
@@ -123,6 +121,10 @@ void GameEngine::moveSelectedUnits(float posX, float posY) {
 void GameEngine::selectBoxing(float startPosX, float startPosY, float endPosX, float endPosY) {
     this->GameData.flags.abortBoxSelection = false;
     this->GameData.flags.inBoxSelection = true;
+    std::cout << "startX: " << startPosX << std::endl;
+    std::cout << "startY: " << startPosY << std::endl;
+    std::cout << "endX: " << endPosX << std::endl;
+    std::cout << "endY: " << endPosY << std::endl;
 
     this->GameData.BoxSelectPos.startPos = glm::vec2(startPosX, startPosY);
     this->GameData.BoxSelectPos.endPos = glm::vec2(endPosX, endPosY);

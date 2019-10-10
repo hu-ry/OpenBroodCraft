@@ -2,16 +2,19 @@
 layout (points) in;
 layout (line_strip, max_vertices = 5) out;
 
-in vec2 endPos;
+in VS_OUT {
+    vec3 startPos;
+    vec3 endPos;
+} gs_in[];
 
 void build_box_selection(vec4 position) {
     gl_Position = position; // 1:start point
     EmitVertex();
-    gl_Position = position + vec4(endPos.x, 0.0f, 0.0f, 0.0f); // 2
+    gl_Position = vec4(gs_in[0].endPos.x, position.y, 0.0f, 1.0f); // 2
     EmitVertex();
-    gl_Position = position + vec4(endPos.x,  endPos.y, 0.0f, 0.0f); // 3:mouse point
+    gl_Position = vec4(gs_in[0].endPos.x,  gs_in[0].endPos.y, 0.0f, 1.0f); // 3:mouse point
     EmitVertex();
-    gl_Position = position + vec4(0.0f, endPos.y, 0.0f, 0.0f); // 4
+    gl_Position = vec4(position.x, gs_in[0].endPos.y, 0.0f, 1.0f); // 4
     EmitVertex();
     gl_Position = position; // 5:end point(start)
 
@@ -20,5 +23,5 @@ void build_box_selection(vec4 position) {
 }
 
 void main() {
-    build_box_selection(gl_in[0].gl_Position);
+    build_box_selection(vec4(gs_in[0].startPos, 1.0f));
 }

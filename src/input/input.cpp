@@ -63,10 +63,11 @@ void processInput(GLFWwindow *window) {
         gameProg->testMoveFirstUnit(relative_world_msPosX, relative_world_msPosY);
     }
     if(msStatus.button == GLFW_MOUSE_BUTTON_LEFT && msStatus.action == GLFW_PRESS) {
-        gameProg->selectBoxing(msStatus.msLastPosX/(SCR_WIDTH/2), msStatus.msLastPosY/(SCR_HEIGHT/2),
-                msStatus.msPosX/(SCR_WIDTH/2), msStatus.msPosY/(SCR_HEIGHT/2));
-        //gameProg->selectBoxing(last_relative_world_msPosX, last_relative_world_msPosY,
-        //                       relative_world_msPosX, relative_world_msPosY);
+        gameProg->selectBoxing(
+                ((float)msStatus.msLastPosX-((float)SCR_WIDTH/2))/(SCR_WIDTH/2),
+                (-((float)msStatus.msLastPosY-((float)SCR_HEIGHT/2)))/(SCR_HEIGHT/2),
+                ((float)msStatus.msPosX-((float)SCR_WIDTH/2))/(SCR_WIDTH/2),
+                (-((float)msStatus.msPosY-((float)SCR_HEIGHT/2)))/(SCR_HEIGHT/2) );
     }
 }
 

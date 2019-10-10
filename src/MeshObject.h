@@ -18,12 +18,13 @@ public:
     unsigned int VAO_ID;
 
     std::vector<glm::vec3> vertices;
+    std::vector<TextureObject> textures;
     int sizeArray;
 
     MeshObject() = default;
 
-    MeshObject(const char* objectdataPath, GLenum datatype, GLenum buffermode, GLenum bufferusage, TextureObject _texture) {
-        this->texture = _texture;
+    MeshObject(const char* objectdataPath, GLenum datatype, GLenum bufferusage, std::vector<TextureObject> _textures) {
+        this->textures = _textures;
         sizeArray = 0;
 
         std::string verticesData = readVerticesf(objectdataPath, &sizeArray);
@@ -67,9 +68,9 @@ public:
 
         // assigning a buffer type to VBO, which will let us configure the currently bound buffer (VBO)
         // by any calls on GL_ARRAY_BUFFER
-        glBindBuffer(buffermode, VBO);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
         // copies the previously defined vertex data into the buffer
-        glBufferData(buffermode, sizeof(vDataf), vDataf, bufferusage);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vDataf), vDataf, bufferusage);
 
         // assigning a buffer type to EBO, which will let us configure the currently bound buffer (EBO)
         // by any calls on GL_ELEMENT_ARRAY_BUFFER
@@ -114,11 +115,13 @@ public:
     void draw(Shader shader) {
         unsigned int normalNr   = 1;
 
-        glActiveTexture(GL_TEXTURE0);
+        for(unsigned int i = 0; i < textures.size(); i++) {
+            glActiveTexture(GL_TEXTURE0 + i);
 
-        shader.setInt("textObj1", 0);
-        glBindTexture(GL_TEXTURE_2D, texture.ID);
+            shader.setInt("textObj1", 0);
 
+            glBindTexture(GL_TEXTURE_2D, textures[i].ID);
+        }
         // start drawing the mesh
         glBindVertexArray(VAO_ID);
         glDrawArrays(GL_TRIANGLES, 0, (int)sizeArray/5);
@@ -131,7 +134,6 @@ public:
     void drawGeoBox(Shader shader) {
         glBindVertexArray(VAO_ID);
         glDrawArrays(GL_POINTS, 0, 1);
-        std::cout << "drawbox" << std::endl;
         glBindVertexArray(0);
     }
 
@@ -151,8 +153,6 @@ public:
 
 private:
     unsigned int VBO;
-
-    TextureObject texture;
 
     std::string readVerticesf(const char* objectdataPath, int* sizeArray) {
         std::string verticesData;
