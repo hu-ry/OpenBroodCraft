@@ -12,7 +12,10 @@
 #include <iostream>
 #include "libs/stb_image.h"
 
-
+struct Texture {
+    unsigned int id;
+    std::string type;
+};
 
 class TextureObject {
 public:
