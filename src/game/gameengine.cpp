@@ -4,6 +4,7 @@
 
 #include "gameengine.h"
 #include "../main.h"
+#include "map/GameMap.h"
 
 
 GameEngine::GameEngine() : TriangleShader(), GeometryShader() {
@@ -40,6 +41,8 @@ void GameEngine::Init() {
 
     this->addUnit(Unit(&marinetileVAO, UNIT_MARINE, glm::vec3(0.0f, 0.0f, 1.0f),
                        Command(), 2));
+
+    GameMap testingGameMap("../maps/test_map.json");
 
     map_tiles map(64, 64, maptileVAOtest);
     this->loadMap(map);
