@@ -30,7 +30,7 @@ void GameEngine::Init() {
     this->GeometryShader = Shader("../shaders/testGeoShader.vesh",
             "../shaders/testGeoShader.frsh", "../shaders/testGeoShader.gesh");
 
-    std::vector<TextureObject> maptile_texture = {TextureObject("../textures/ownTile.png")};
+    std::vector<TextureObject> maptile_texture = {TextureObject("../textures/maptiles/64px_cobblestone_tile.png")};
     std::vector<TextureObject> marine_texture = {TextureObject("../textures/marine_new.png")};
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
@@ -65,7 +65,7 @@ void GameEngine::Execute() {
     TriangleShader.setMatrix4fv("view", 1, view);
     TriangleShader.setMatrix4fv("projection", 1, projection);
  
-    // drawing the map
+    // drawing the GameMap
     Current_Map.draw_map(&model, &TriangleShader);
  
     // drawing all TexEntities

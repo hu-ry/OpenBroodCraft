@@ -36,6 +36,7 @@ extern float lastFrame;
 extern int MAX_AMOUNT_UNITS;
 
 extern float TILE_SIZE;
+const unsigned int MAX_MAP_SIZE = 4096;
 
 enum ProgMode {
     PROG_NONE = -1,
