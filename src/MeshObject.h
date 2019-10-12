@@ -23,7 +23,7 @@ public:
 
     MeshObject() = default;
 
-    MeshObject(const char* objectdataPath, GLenum datatype, GLenum bufferusage, std::vector<TextureObject> _textures) {
+    MeshObject(const char* objectdataPath, GLenum bufferusage, bool useInstancing, std::vector<TextureObject> _textures) {
         this->textures = _textures;
         sizeArray = 0;
 
@@ -57,12 +57,14 @@ public:
             }
         }
 
+        if(useInstancing) {
+            initInstancing();
+        }
 
         // takes an ID for the vertex arrays called VAO and generates it
         glGenVertexArrays(1, &VAO_ID);
         // takes an ID for the buffers called VBO and EBO and generates them
         glGenBuffers(1, &VBO);
-    //    glGenBuffers(1, &EBO);
         // binding the Vertex Array Object
         glBindVertexArray(VAO_ID);
 
@@ -72,18 +74,12 @@ public:
         // copies the previously defined vertex data into the buffer
         glBufferData(GL_ARRAY_BUFFER, sizeof(vDataf), vDataf, bufferusage);
 
-        // assigning a buffer type to EBO, which will let us configure the currently bound buffer (EBO)
-        // by any calls on GL_ELEMENT_ARRAY_BUFFER
-    //    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        //  copies the previously defined indices data into the buffer
-    //    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, bufferusage);
-
         // telling OpenGL how it should interpret the vertex data
         // position attribute
-        glVertexAttribPointer(0, 3, datatype, GL_FALSE, 5 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
         // texture mapping attribute
-        glVertexAttribPointer(1, 2, datatype, GL_FALSE, 5 * sizeof(float), (void*)(3* sizeof(float)));
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3* sizeof(float)));
         glEnableVertexAttribArray(1);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -106,7 +102,6 @@ public:
         glBufferData(buffermode, sizeof(points), points, bufferusage);
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0);
 
         // unbinding the VAO so there won't happen any accidents of other VAO's getting modified on accident
         unbindVertexArray();
@@ -153,6 +148,14 @@ public:
 
 private:
     unsigned int VBO;
+    unsigned int instanceVBO;
+
+    void initInstancing() {
+        glGenBuffers(1, &instanceVBO);
+        glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+        //glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * 100, &translations[0], GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
 
     std::string readVerticesf(const char* objectdataPath, int* sizeArray) {
         std::string verticesData;

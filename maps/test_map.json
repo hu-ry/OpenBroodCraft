@@ -2,7 +2,7 @@
   "map_name": "test_map",
   "map_version": "0.0.1",
   "map_size": 4096,
-  "map_dimensions": "64x64",
+  "map_dimensions": [64, 64],
   "map_tiles": [
     {
       "id": 0,

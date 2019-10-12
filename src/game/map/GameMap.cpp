@@ -10,6 +10,7 @@ using json = nlohmann::json;
 
 GameMap::GameMap(const char* mapdataPath) {
     parseJSON(mapdataPath);
+    preparing_map();
 }
 
 
@@ -43,11 +44,14 @@ void GameMap::parseJSON(const char* mapdataPath) {
 
     this->map_name = jsonData.value("map_name", "");
     this->map_version = jsonData.value("map_version", "null");
+    json temp = jsonData.at("map_dimensions");
+    this->map_dimensions[0] = temp.at(0);
+    this->map_dimensions[1] = temp.at(1);
     this->map_size = jsonData.value("map_size", 0);
 
     json map_tile_data = jsonData.at("map_tiles");
     std::cout << "map_tile_data: " << map_tile_data << "\n" << std::endl;
-    json temp = map_tile_data.back();
+    temp = map_tile_data.back();
     int max_i = temp.value("id", 0);
 
     for(int i=0; i <= max_i; i++) {
@@ -67,6 +71,25 @@ void GameMap::parseJSON(const char* mapdataPath) {
         this->tiles[i] = tile_entity{.index = i, .tile = &this->mapTile.at((unsigned int)*it)};
         ++it;
         std::cout << "map_tile_pointer: " << &tiles[i].tile->file_name << std::endl;
+    }
+
+}
+
+void GameMap::preparing_map() {
+float x_start = -((map_dimensions[0]/2)*TILE_SIZE)-(TILE_SIZE/2);
+float y_start = (map_dimensions[1]/2)*TILE_SIZE-(TILE_SIZE/2);
+
+    for(int i=0; i < map_size; i++) {
+        int x_pos = (i % map_dimensions[0]);
+        int y_pos = (i - (i % map_dimensions[0])) / map_dimensions[0];
+        tiles[i].tile->offsets.data[tiles[i].tile->offsets.size] = glm::vec2(
+                (x_start + x_pos*TILE_SIZE)/FROSTUM_WIDTH,
+                (y_start + y_pos*TILE_SIZE)/FROSTUM_HEIGHT );
+
+        std::cout << "x: " << tiles[i].tile->offsets.data[tiles[i].tile->offsets.size].x <<
+        " y: " << tiles[i].tile->offsets.data[tiles[i].tile->offsets.size].y << std::endl;
+        tiles[i].tile->offsets.size++;
+        //tiles[i].tile->offsets.data[i] = glm::vec2();
     }
 
 }

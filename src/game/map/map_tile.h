@@ -17,7 +17,7 @@ enum Orientation{
 };
 
 typedef struct{
-    unsigned int size;
+    unsigned int size = 0;
     glm::vec2 data[MAX_MAP_SIZE];
 } vec2_4096_t;
 

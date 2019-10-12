@@ -21,13 +21,14 @@ public:
 private:
     std::string map_name;
     std::string map_version;
-
+    unsigned int map_dimensions[2];
     unsigned int map_size;
 
     std::vector<map_tile> mapTile;
     tile_entity tiles[MAX_MAP_SIZE];
 
     void parseJSON(const char* mapdataPath);
+    void preparing_map();
 };
 
 
