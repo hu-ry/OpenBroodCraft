@@ -5,7 +5,7 @@
 #ifndef OPENBROODCRAFT_TEXENTITY_H
 #define OPENBROODCRAFT_TEXENTITY_H
 
-#include "../headerInclude.h"
+#include "../headerinclude.h"
 
 enum EntityType {
     ENTITY_NONE = -1,

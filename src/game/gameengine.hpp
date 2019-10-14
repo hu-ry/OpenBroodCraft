@@ -7,11 +7,11 @@
 
 
 #include <unordered_map>
-#include "Unit.h"
-#include "../globalVar.h"
+#include "unit.h"
+#include "../globalvar.h"
 #include "../camera.h"
 #include "map/map_tiles.h"
-#include "kernelStore.h"
+#include "kernelstore.h"
 
 class GameEngine {
 public:
@@ -20,28 +20,31 @@ public:
 
     GameEngine();
 
-    void Process_Gamelogic();
+    void processGamelogic();
 
-    void Execute();
+    void execute();
 
 
     int addUnit(Unit unit_to_add);
     void loadMap(map_tiles map);
 
-    void recieveInput(float posX, float posY);
+    void recieveKeyboardInput(float posX, float posY);
+    void moveCamera(Camera_Movement t_direction);
+    void zoomCamera(const double &t_offset);
     void moveSelectedUnits(float posX, float posY);
     void selectBoxing(float startPosX, float startPosY, float endPosX, float endPosY);
-    void testMoveFirstUnit(float posX, float posY);
+    void testMoveFirstUnit(const float &posX, const float &posY);
 
     void Init();
     void free();
 
 private:
-    KernelStore GameData;
+    KernelStore gamedata;
 
     int Current_Unit = 0;
     map_tiles Current_Map;
 
+    Camera camera;
     glm::mat4 model         = glm::mat4(1.0f);
     glm::mat4 view          = glm::mat4(1.0f);
     glm::mat4 projection    = glm::mat4(1.0f);

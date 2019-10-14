@@ -1,13 +1,13 @@
 //
-// Created by Guest on 11/10/2019.
+// Created by RH on 11/10/2019.
 //
 
 #ifndef OPENBROODCRAFT_MAP_TILE_H
 #define OPENBROODCRAFT_MAP_TILE_H
 
 #include <string>
-#include "../../globalVar.h"
-#include "../../headerInclude.h"
+#include "../../globalvar.h"
+#include "../../headerinclude.h"
 
 enum Orientation{
     TOP_UP = 0,

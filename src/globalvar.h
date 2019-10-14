@@ -1,5 +1,5 @@
 //
-// Created by Guest on 24/08/2019.
+// Created by RH on 24/08/2019.
 //
 
 #ifndef TESTINGOPENGL_GLOBALVAR_H

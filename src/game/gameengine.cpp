@@ -1,16 +1,16 @@
 //
-// Created by Guest on 29/08/2019.
+// Created by RH on 29/08/2019.
 //
 
-#include "gameengine.h"
+#include "gameengine.hpp"
 #include "../main.h"
-#include "map/GameMap.h"
+#include "map/gamemap.h"
 
 
-GameEngine::GameEngine() : TriangleShader(), GeometryShader() {
+GameEngine::GameEngine() : TriangleShader(), GeometryShader(), camera(INITIAL_CAM_POSITION) {
 
     //TODO: Write some useful stuff in here pls
-    this->GameData = KernelStore{
+    this->gamedata = KernelStore{
         GameControlFlags{false, false,false, false},
                                   Square{glm::vec2(-0.5f,-0.5f),glm::vec2(0.5f,0.5f)},
                                   false,
@@ -51,13 +51,13 @@ void GameEngine::Init() {
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
-void GameEngine::Execute() {
+void GameEngine::execute() {
     /* render happens here */
     glClearColor(0.2f, 0.5f, 0.6f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         //    model = glm::rotate(model, glm::radians(20.0f), glm::vec3(1.0f, 0.3f, 0.5f));
-    view          = Camera.GetViewMatrix();
+    view          = camera.GetViewMatrix();
     projection    = glm::ortho(-FROSTUM_WIDTH/FROSTUM_ZOOM, FROSTUM_WIDTH/FROSTUM_ZOOM, -FROSTUM_HEIGHT/FROSTUM_ZOOM,
                             FROSTUM_HEIGHT/FROSTUM_ZOOM, FROSTUM_NEAR, FROSTUM_FAR);
     model         = glm::mat4(1.0f);
@@ -85,26 +85,26 @@ void GameEngine::Execute() {
     model = glm::mat4(1.0f);
 
     // drawing UI Effects
-    if(this->GameData.flags.inBoxSelection) {
+    if(this->gamedata.flags.inBoxSelection) {
         GeometryShader.use();
         GeometryShader.setMatrix4fv("model", 1, model);
         GeometryShader.setMatrix4fv("view", 1, view);
         GeometryShader.setMatrix4fv("projection", 1, projection);
         this->GeometryShader.set2Float("boxPos",
-                GameData.BoxSelectPos.startPos.x, GameData.BoxSelectPos.startPos.y);
+                gamedata.BoxSelectPos.startPos.x, gamedata.BoxSelectPos.startPos.y);
         this->GeometryShader.set2Float("mousePosOffset",
-                GameData.BoxSelectPos.endPos.x, GameData.BoxSelectPos.endPos.y);
+                gamedata.BoxSelectPos.endPos.x, gamedata.BoxSelectPos.endPos.y);
         this->BoxSelectionVAO.drawGeoBox(GeometryShader);
-        this->GameData.flags.inBoxSelection = false;
+        this->gamedata.flags.inBoxSelection = false;
     }
 }
 
-void GameEngine::Process_Gamelogic() {
+void GameEngine::processGamelogic() {
 
-    if(this->GameData.flags.inBoxSelection && this->GameData.flags.abortBoxSelection) {
-        this->GameData.flags.inBoxSelection = false;
+    if(this->gamedata.flags.inBoxSelection && this->gamedata.flags.abortBoxSelection) {
+        this->gamedata.flags.inBoxSelection = false;
     }
-    this->GameData.flags.abortBoxSelection = true;
+    this->gamedata.flags.abortBoxSelection = true;
 }
 
 int GameEngine::addUnit(Unit unit_to_add) {
@@ -113,8 +113,16 @@ int GameEngine::addUnit(Unit unit_to_add) {
     return this->Current_Unit;
 }
 
-void GameEngine::recieveInput(float posX, float posY) {
+void GameEngine::recieveKeyboardInput(float posX, float posY) {
 
+}
+
+void GameEngine::moveCamera(Camera_Movement t_direction) {
+    camera.ProcessKeyboard(t_direction, deltaTime);
+}
+
+void GameEngine::zoomCamera(const double &t_offset) {
+    camera.ProcessScrollInput(t_offset);
 }
 
 void GameEngine::moveSelectedUnits(float posX, float posY) {
@@ -122,19 +130,19 @@ void GameEngine::moveSelectedUnits(float posX, float posY) {
 }
 
 void GameEngine::selectBoxing(float startPosX, float startPosY, float endPosX, float endPosY) {
-    this->GameData.flags.abortBoxSelection = false;
-    this->GameData.flags.inBoxSelection = true;
+    this->gamedata.flags.abortBoxSelection = false;
+    this->gamedata.flags.inBoxSelection = true;
     std::cout << "startX: " << startPosX << std::endl;
     std::cout << "startY: " << startPosY << std::endl;
     std::cout << "endX: " << endPosX << std::endl;
     std::cout << "endY: " << endPosY << std::endl;
 
-    this->GameData.BoxSelectPos.startPos = glm::vec2(startPosX, startPosY);
-    this->GameData.BoxSelectPos.endPos = glm::vec2(endPosX, endPosY);
+    this->gamedata.BoxSelectPos.startPos = glm::vec2(startPosX, startPosY);
+    this->gamedata.BoxSelectPos.endPos = glm::vec2(endPosX, endPosY);
 }
 
-void GameEngine::testMoveFirstUnit(float posX, float posY) {
-    this->ActiveUnits[0].issueCmd(COMMAND_MOVE, glm::vec2(posX, posY));
+void GameEngine::testMoveFirstUnit(const float &posX, const float &posY) {
+    this->ActiveUnits[0].issueCmd(COMMAND_MOVE, glm::vec2(camera.Position.x+posX, camera.Position.y+posY));
 }
 
 void GameEngine::loadMap(map_tiles map) {

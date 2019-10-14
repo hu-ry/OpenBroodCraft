@@ -5,7 +5,7 @@
 #ifndef OPENBROODCRAFT_HEADERINCLUDE_H
 #define OPENBROODCRAFT_HEADERINCLUDE_H
 
-#include "MeshObject.h"
+#include "game/engine/meshobject.h"
 
 
 #endif //OPENBROODCRAFT_HEADERINCLUDE_H

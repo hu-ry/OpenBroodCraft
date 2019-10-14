@@ -10,7 +10,7 @@
 #include <glm/glm.hpp>
 
 #include <iostream>
-#include "libs/stb_image.h"
+#include "../../libs/stb_image.h"
 
 struct Texture {
     unsigned int id;

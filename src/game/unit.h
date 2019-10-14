@@ -1,14 +1,14 @@
 //
-// Created by Guest on 27/08/2019.
+// Created by RH on 27/08/2019.
 //
 
 #ifndef OPENBROODCRAFT_UNIT_H
 #define OPENBROODCRAFT_UNIT_H
 
 
-#include "../globalVar.h"
+#include "../globalvar.h"
 #include "command.h"
-#include "TexEntity.h"
+#include "texentity.h"
 
 enum UnitType {
     UNIT_NONE = -1,

@@ -1,5 +1,5 @@
 //
-// Created by Guest on 11/10/2019.
+// Created by RH on 11/10/2019.
 //
 
 #ifndef OPENBROODCRAFT_MAP_H

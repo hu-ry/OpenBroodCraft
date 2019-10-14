@@ -13,10 +13,9 @@
 
 #include "libs/stb_image.h"
 #include "main.h"
-#include "globalVar.h"
+#include "globalvar.h"
 
 
-class Camera Camera(INITIAL_CAM_POSITION);
 
 int main(void) {
     GLFWwindow* window;
@@ -40,8 +39,8 @@ int main(void) {
     //Create GameEngine
     GameEngine gameprog;
 
-    //initialize Mouse Input
-    initMouse(&Camera, &gameprog);
+    //initialize Input
+    initMouse(&gameprog);
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
@@ -78,10 +77,10 @@ int main(void) {
         processInput(window);
 
         /* processing game logic happens here */
-        gameprog.Process_Gamelogic();
+        gameprog.processGamelogic();
 
         /* render happens here */
-        gameprog.Execute();
+        gameprog.execute();
 
         // uncomment for frametimes
         //std::cout << "frametime: " << deltaTime << std::endl;

@@ -12,11 +12,11 @@
 
 #include "../camera.h"
 #include <iostream>
-#include "../globalVar.h"
-#include "../game/gameengine.h"
+#include "../globalvar.h"
+#include "../game/gameengine.hpp"
 
 
-void initMouse(Camera* __Camera, GameEngine *gameprog);
+void initMouse(GameEngine *gameprog);
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 

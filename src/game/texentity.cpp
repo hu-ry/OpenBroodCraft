@@ -2,7 +2,7 @@
 // Created by RH on 05.10.2019.
 //
 
-#include "TexEntity.h"
+#include "texentity.h"
 
 unsigned int TexEntity::Current_ID;
 

@@ -2,10 +2,9 @@
 // Created by Guest on 27/08/2019.
 //
 #include "input.h"
-#include "../game/Unit.h"
+#include "../game/unit.h"
 
 MouseStatus msStatus;
-Camera* _Camera;
 GameEngine* gameProg;
 
 float relative_world_msPosX;
@@ -14,8 +13,7 @@ float last_relative_world_msPosX;
 float last_relative_world_msPosY;
 
 
-void initMouse(Camera* __Camera, GameEngine *gameprog) {
-    _Camera = __Camera;
+void initMouse(GameEngine *gameprog) {
     gameProg = gameprog;
     msStatus.msPosX = 0;
     msStatus.msPosY = 0;
@@ -40,24 +38,24 @@ void processInput(GLFWwindow *window) {
     float cameraSpeed = 2.5f * deltaTime;
     //glfwGetCursorPos(window, &msStatus.msPosX, &msStatus.msPosY);
 
-    relative_world_msPosX = _Camera->Position.x + ((float)msStatus.msPosX-((float)SCR_WIDTH/2))/(FROSTUM_ZOOM/2);
-    relative_world_msPosY = _Camera->Position.y + (-((float)msStatus.msPosY-((float)SCR_HEIGHT/2)))/(FROSTUM_ZOOM/2);
+    relative_world_msPosX = ((float)msStatus.msPosX-((float)SCR_WIDTH/2))/(FROSTUM_ZOOM/2);
+    relative_world_msPosY = (-((float)msStatus.msPosY-((float)SCR_HEIGHT/2)))/(FROSTUM_ZOOM/2);
 
     //std::cout << "frametime: " << deltaTime << std::endl;
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
     }
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        _Camera->ProcessKeyboard(FORWARD, deltaTime);
+        gameProg->moveCamera(FORWARD);
     }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        _Camera->ProcessKeyboard(BACKWARD, deltaTime);
+        gameProg->moveCamera(BACKWARD);
     }
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        _Camera->ProcessKeyboard(LEFT, deltaTime);
+        gameProg->moveCamera(LEFT);
     }
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-        _Camera->ProcessKeyboard(RIGHT, deltaTime);
+        gameProg->moveCamera(RIGHT);
     }
     if(glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
         gameProg->testMoveFirstUnit(relative_world_msPosX, relative_world_msPosY);
@@ -72,7 +70,7 @@ void processInput(GLFWwindow *window) {
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
-    _Camera->ProcessScrollInput(yoffset);
+    gameProg->zoomCamera(yoffset);
     std::cout << "ScrollOffset_Y: " << yoffset << std::endl;
 }
 
@@ -90,8 +88,8 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
         msStatus.msLastPosX = msStatus.msPosX;
         msStatus.msLastPosY = msStatus.msPosY;
-        last_relative_world_msPosX = _Camera->Position.x + ((float)msStatus.msLastPosX-((float)SCR_WIDTH/2))/(FROSTUM_ZOOM/2);
-        last_relative_world_msPosY = _Camera->Position.y + (-((float)msStatus.msLastPosY-((float)SCR_HEIGHT/2)))/(FROSTUM_ZOOM/2);
+        last_relative_world_msPosX = ((float)msStatus.msLastPosX-((float)SCR_WIDTH/2))/(FROSTUM_ZOOM/2);
+        last_relative_world_msPosY = (-((float)msStatus.msLastPosY-((float)SCR_HEIGHT/2)))/(FROSTUM_ZOOM/2);
         std::cout << " button: " << "BUTTON_LEFT" << " action: " << "PRESS" << std::endl;
     }
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
@@ -104,8 +102,8 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
     msStatus.msPosX = (int)xpos;
     msStatus.msPosY = (int)ypos;
-    relative_world_msPosX = _Camera->Position.x + ((float)msStatus.msPosX-((float)SCR_WIDTH/2))/(FROSTUM_ZOOM/2);
-    relative_world_msPosY = _Camera->Position.y + (-((float)msStatus.msPosY-((float)SCR_HEIGHT/2)))/(FROSTUM_ZOOM/2);
+    relative_world_msPosX = ((float)msStatus.msPosX-((float)SCR_WIDTH/2))/(FROSTUM_ZOOM/2);
+    relative_world_msPosY = (-((float)msStatus.msPosY-((float)SCR_HEIGHT/2)))/(FROSTUM_ZOOM/2);
 
     std::cout << " MousePosX: " << relative_world_msPosX << " MousePosY: " << relative_world_msPosY << std::endl;
     std::cout << "MOUSEframetime: " << deltaTime << std::endl;

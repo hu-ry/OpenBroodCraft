@@ -8,9 +8,9 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "../../globalVar.h"
-#include "../../shader_vf.h"
-#include "../../headerInclude.h"
+#include "../../globalvar.h"
+#include "../engine/shader_vf.h"
+#include "../../headerinclude.h"
 
 class map_tiles {
 public:

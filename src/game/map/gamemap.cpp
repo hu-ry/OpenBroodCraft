@@ -1,9 +1,9 @@
 //
-// Created by Guest on 11/10/2019.
+// Created by RH on 11/10/2019.
 //
 
-#include "GameMap.h"
-#include <nlohmann/json.hpp>
+#include "gamemap.h"
+#include "../../libs/json.hpp"
 
 // for convenience
 using json = nlohmann::json;

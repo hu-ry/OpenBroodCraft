@@ -11,7 +11,7 @@
 #include <algorithm>
 
 #include "shader_vf.h"
-#include "TextureObject.h"
+#include "textureobject.h"
 
 class MeshObject {
 public:
