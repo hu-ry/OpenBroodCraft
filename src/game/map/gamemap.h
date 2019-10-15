@@ -19,6 +19,8 @@ public:
     std::string getMapName();
     std::string getMapVersion();
     std::vector<map_tile> getMapTile();
+
+    void deallocateMesh();
 private:
     std::string map_name;
     std::string map_version;

@@ -27,6 +27,8 @@ Unit::Unit() : TexEntity() {
 
 void Unit::Run() {
     this->processCommand();
+    std::cout << this->Mesh.VAO_ID << std::endl;
+
 }
 
 void Unit::processCommand() {

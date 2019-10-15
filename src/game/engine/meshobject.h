@@ -26,6 +26,7 @@ public:
 
     MeshObject(const char* objectdataPath, GLenum bufferusage, bool useInstancing, std::vector<TextureObject> _textures) {
         this->textures = _textures;
+        this->instanceSize = 0;
         sizeArray = 0;
 
         std::string verticesData = readVerticesf(objectdataPath, &sizeArray);
@@ -126,6 +127,25 @@ public:
         glActiveTexture(GL_TEXTURE0);
     }
 
+    void drawInstanced(Shader shader) {
+        unsigned int normalNr   = 1;
+
+        for(unsigned int i = 0; i < textures.size(); i++) {
+            glActiveTexture(GL_TEXTURE0 + i);
+
+            shader.setInt("textObj1", 0);
+
+            glBindTexture(GL_TEXTURE_2D, textures[i].ID);
+        }
+        // start drawing the mesh
+        glBindVertexArray(VAO_ID);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, (int)sizeArray/5, instanceSize);
+
+        glBindVertexArray(0);
+
+        glActiveTexture(GL_TEXTURE0);
+    }
+
     void drawGeoBox(Shader shader) {
         glBindVertexArray(VAO_ID);
         glDrawArrays(GL_POINTS, 0, 1);
@@ -133,6 +153,7 @@ public:
     }
 
     void initInstancing(glm::vec2 translations[MAX_MAP_SIZE], const unsigned int &size) {
+        instanceSize = size;
         glGenBuffers(1, &instanceVBO);
         glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
         if(size != MAX_MAP_SIZE) {
@@ -170,6 +191,7 @@ public:
 private:
     unsigned int VBO;
     unsigned int instanceVBO;
+    int instanceSize;
 
 
     std::string readVerticesf(const char* objectdataPath, int* sizeArray) {

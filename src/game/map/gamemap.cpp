@@ -17,8 +17,16 @@ GameMap::GameMap(const char* mapdataPath) {
 
 void GameMap::draw(glm::mat4* _model, Shader* _shader) {
  //TODO: Goes through all the map_tile's in mapTile and uses the mesh and the offsets to draw the instanced meshes
+    glm::mat4 temp_model = *_model;
+    *_model = glm::translate(*_model,
+            glm::vec3(0, 0, WORLD_BORDER_Z));
+    _shader->setMatrix4fv("model", 1, *_model);
 
-
+    for (unsigned int i = 0; i < this->getMapTile().size(); ++i) {
+        this->getMapTile().at(i).mesh.drawInstanced(*_shader);
+        std::cout << "textures: " << this->getMapTile().at(i).mesh.VAO_ID << std::endl;
+    }
+    *_model = temp_model;
 }
 
 void GameMap::parseJSON(const char* mapdataPath) {
@@ -85,7 +93,7 @@ float y_start = ((float)map_dimensions[1]/2)*TILE_SIZE-(TILE_SIZE/2);
         int y_pos = (i - (i % map_dimensions[0])) / map_dimensions[0];
         tiles[i].tile->offsets.data[tiles[i].tile->offsets.size] = glm::vec2(
                 (x_start + x_pos*TILE_SIZE)/FROSTUM_WIDTH,
-                (y_start - y_pos*TILE_SIZE)/FROSTUM_HEIGHT );
+                ((y_start - y_pos*TILE_SIZE)/FROSTUM_HEIGHT)-1.5f );
 
         std::cout << "x: " << tiles[i].tile->offsets.data[tiles[i].tile->offsets.size].x <<
         " y: " << tiles[i].tile->offsets.data[tiles[i].tile->offsets.size].y << std::endl;
@@ -108,4 +116,10 @@ std::string GameMap::getMapVersion() {
 
 std::vector<map_tile> GameMap::getMapTile() {
     return this->mapTile;
+}
+
+void GameMap::deallocateMesh() {
+    for (unsigned int i = 0; i < (unsigned int)this->getMapTile().size(); ++i) {
+        this->getMapTile().at(i).mesh.deallocateVertexArrays();
+    }
 }

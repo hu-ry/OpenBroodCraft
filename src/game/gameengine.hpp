@@ -27,7 +27,6 @@ public:
 
 
     int addUnit(Unit unit_to_add);
-    void loadMap(map_tiles map);
 
     void recieveKeyboardInput(float posX, float posY);
     void moveCamera(Camera_Movement t_direction);
@@ -43,7 +42,6 @@ private:
     KernelStore gamedata;
 
     int Current_Unit = 0;
-    map_tiles Current_Map;
     GameMap map_to_draw;
 
     Camera camera;

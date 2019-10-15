@@ -52,8 +52,6 @@ void GameEngine::Init() {
 
 
 
-    map_tiles map(64, 64, maptileVAOtest);
-    this->loadMap(map);
 
     // uncomment this call to draw in wireframe polygons.
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -77,8 +75,8 @@ void GameEngine::execute() {
     TriangleShader.setMatrix4fv("projection", 1, projection);
  
     // drawing the GameMap
-    Current_Map.draw_map(&model, &TriangleShader);
- 
+    map_to_draw.draw(&model, &TriangleShader);
+
     // drawing all TexEntities
     if(this->Current_Unit != 0) {
  
@@ -153,17 +151,13 @@ void GameEngine::testMoveFirstUnit(const float &posX, const float &posY) {
     this->ActiveUnits[0].issueCmd(COMMAND_MOVE, glm::vec2(camera.Position.x+posX, camera.Position.y+posY));
 }
 
-void GameEngine::loadMap(map_tiles map) {
-    this->Current_Map = map;
-}
-
 void GameEngine::free() {
     if(this->Current_Unit != 0) {
         for(int i=0;i<=this->Current_Unit;i++) {
             this->ActiveUnits[i].free_mesh();
         }
     }
-    this->Current_Map.mesh.deallocateVertexArrays();
+    this->map_to_draw.deallocateMesh();
     delete[] this->ActiveUnits;
     this->BoxSelectionVAO.deallocateVertexArrays();
     // TexEntities.erase(TexEntities.begin(), TexEntities.end());
