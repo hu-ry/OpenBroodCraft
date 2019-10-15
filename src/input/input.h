@@ -10,7 +10,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/vec4.hpp>
 
-#include "../camera.h"
+#include "../game/engine/camera.h"
 #include <iostream>
 #include "../globalvar.h"
 #include "../game/gameengine.hpp"

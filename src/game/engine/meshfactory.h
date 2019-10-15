@@ -11,10 +11,17 @@
 
 class MeshFactory {
 public:
-    MeshFactory();
+    MeshFactory(const std::string &pathTextures, const std::string &pathModel);
 
-    MeshObject createMapMesh(GameMap t_map);
+    void createMapMesh(GameMap t_map);
 
+    MeshObject createGeometryMesh();
+    MeshObject createUnitMesh();
+
+private:
+    std::string path_to_map_textures = "../textures/maptiles/";
+    std::string path_to_textures;
+    std::string path_to_models;
 };
 
 

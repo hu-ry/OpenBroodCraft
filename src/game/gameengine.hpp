@@ -9,9 +9,10 @@
 #include <unordered_map>
 #include "unit.h"
 #include "../globalvar.h"
-#include "../camera.h"
+#include "engine/camera.h"
 #include "map/map_tiles.h"
 #include "kernelstore.h"
+#include "map/gamemap.h"
 
 class GameEngine {
 public:
@@ -43,6 +44,7 @@ private:
 
     int Current_Unit = 0;
     map_tiles Current_Map;
+    GameMap map_to_draw;
 
     Camera camera;
     glm::mat4 model         = glm::mat4(1.0f);

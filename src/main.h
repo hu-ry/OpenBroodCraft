@@ -11,7 +11,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "globalvar.h"
-#include "camera.h"
+#include "game/engine/camera.h"
 #include "input/input.h"
 #include "game/gameengine.hpp"
 

@@ -18,6 +18,7 @@ public:
     unsigned int getMapSize();
     std::string getMapName();
     std::string getMapVersion();
+    std::vector<map_tile> getMapTile();
 private:
     std::string map_name;
     std::string map_version;

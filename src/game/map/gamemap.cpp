@@ -16,6 +16,8 @@ GameMap::GameMap(const char* mapdataPath) {
 
 
 void GameMap::draw(glm::mat4* _model, Shader* _shader) {
+ //TODO: Goes through all the map_tile's in mapTile and uses the mesh and the offsets to draw the instanced meshes
+
 
 }
 
@@ -70,26 +72,24 @@ void GameMap::parseJSON(const char* mapdataPath) {
 
         this->tiles[i] = tile_entity{.index = i, .tile = &this->mapTile.at((unsigned int)*it)};
         ++it;
-        std::cout << "map_tile_pointer: " << &tiles[i].tile->file_name << std::endl;
     }
 
 }
 
 void GameMap::preparing_map() {
-float x_start = -((map_dimensions[0]/2)*TILE_SIZE)-(TILE_SIZE/2);
-float y_start = (map_dimensions[1]/2)*TILE_SIZE-(TILE_SIZE/2);
+float x_start = -(((float)map_dimensions[0]/2)*TILE_SIZE)-(TILE_SIZE/2);
+float y_start = ((float)map_dimensions[1]/2)*TILE_SIZE-(TILE_SIZE/2);
 
     for(int i=0; i < map_size; i++) {
         int x_pos = (i % map_dimensions[0]);
         int y_pos = (i - (i % map_dimensions[0])) / map_dimensions[0];
         tiles[i].tile->offsets.data[tiles[i].tile->offsets.size] = glm::vec2(
                 (x_start + x_pos*TILE_SIZE)/FROSTUM_WIDTH,
-                (y_start + y_pos*TILE_SIZE)/FROSTUM_HEIGHT );
+                (y_start - y_pos*TILE_SIZE)/FROSTUM_HEIGHT );
 
         std::cout << "x: " << tiles[i].tile->offsets.data[tiles[i].tile->offsets.size].x <<
         " y: " << tiles[i].tile->offsets.data[tiles[i].tile->offsets.size].y << std::endl;
         tiles[i].tile->offsets.size++;
-        //tiles[i].tile->offsets.data[i] = glm::vec2();
     }
 
 }
@@ -104,4 +104,8 @@ unsigned int GameMap::getMapSize() {
 
 std::string GameMap::getMapVersion() {
     return this->map_version;
+}
+
+std::vector<map_tile> GameMap::getMapTile() {
+    return this->mapTile;
 }
