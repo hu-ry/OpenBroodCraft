@@ -21,7 +21,7 @@ void GameMap::draw(glm::mat4* _projection, glm::mat4* _view, glm::mat4* _model, 
     _shader->setMatrix4fv("view", 1, *_view);
  //TODO: Goes through all the map_tile's in mapTile and uses the mesh and the offsets to draw the instanced meshes
     glm::mat4 temp_model = *_model;
-    *_model = glm::translate(*_model, glm::vec3(0, 0, WORLD_BORDER_Z));
+
     _shader->setMatrix4fv("model", 1, *_model);
 
     for (unsigned int i = 0; i < this->getMapTile().size(); ++i) {
@@ -104,8 +104,8 @@ float y_start = ((float)map_dimensions[1]/2)*TILE_SIZE-(TILE_SIZE/2);
         int x_pos = (i % map_dimensions[0]);
         int y_pos = (i - (i % map_dimensions[0])) / map_dimensions[0];
         tiles[i].offset = glm::vec2(
-                (x_start + x_pos*TILE_SIZE)/FROSTUM_WIDTH,
-                ((y_start - y_pos*TILE_SIZE)/FROSTUM_HEIGHT)-1.5f );
+                (x_start + x_pos*TILE_SIZE)//FROSTUM_WIDTH,
+                ,(y_start - y_pos*TILE_SIZE));//FROSTUM_HEIGHT)-1.5f );
 
         std::cout << "x: " << tiles[i].offset.x << " y: " << tiles[i].offset.y << std::endl;
     }
@@ -132,8 +132,8 @@ tile_entity* GameMap::getEntitiesPtr() {
     return &this->tiles[0];
 }
 
-MeshObject GameMap::getMesh(int index) {
-    return this->meshes[index];
+MeshObject* GameMap::getMeshPtr(int index) {
+    return &this->meshes[index];
 }
 
 

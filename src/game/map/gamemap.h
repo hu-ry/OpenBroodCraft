@@ -23,7 +23,7 @@ public:
     std::string getMapVersion();
     std::vector<map_tile> getMapTile();
     tile_entity* getEntitiesPtr();
-    MeshObject getMesh(int index);
+    MeshObject* getMeshPtr(int index);
 
 
     void deallocateMesh();

@@ -40,12 +40,9 @@ void GameEngine::Init() {
     meshMaker.createMapMesh(&map_to_draw);
     this->BoxSelectionVAO = meshMaker.createGeometryMesh();
 
-    std::vector<TextureObject> maptile_texture = {TextureObject("../textures/maptiles/64px_cobblestone_tile.png")};
     std::vector<TextureObject> marine_texture = {TextureObject("../textures/marine_new.png")};
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
-    MeshObject maptileVAOtest("../objectmodels/testTile.vmo", GL_STATIC_DRAW, false, maptile_texture);
-
     MeshObject marinetileVAO("../objectmodels/marineTile.vmo", GL_STATIC_DRAW, false, marine_texture);
 
     this->addUnit(Unit(&marinetileVAO, UNIT_MARINE, glm::vec3(0.0f, 0.0f, 1.0f),

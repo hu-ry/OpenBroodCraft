@@ -18,20 +18,20 @@ void MeshFactory::createMapMesh(GameMap* t_map) {
         std::vector<TextureObject> test;
         test.push_back( TextureObject(temp.append(t_map->getMapTile().at(i).file_name).c_str()) );
         MeshObject meshtest = MeshObject("../objectmodels/testTile.vmo", GL_STATIC_DRAW, true, test);
-        meshtest.instanceSize = t_map->getMapTile().at(i).offset_amount;
         t_map->push_mesh(meshtest);
         glm::vec2 translations[MAX_MAP_SIZE];
         int count_trans = 0;
         for(int k = 0; k < t_map->getMapSize(); k++) {
-            // comparing if the pointers are the same
+            // comparing if the id's are the same
             if( t_map->getEntitiesPtr()[k].tile->id == (t_map->getMapTile().at(i)).id ) {
                 translations[count_trans] = t_map->getEntitiesPtr()[k].offset;
                 count_trans++;
             }
         }
-        t_map->getMesh(i).initInstancing(
+        t_map->getMeshPtr(i)->initInstancing(
                 translations,
                 t_map->getMapTile().at(i).offset_amount );
+        std::cout << t_map->getMeshPtr(i)->instanceSize << std::endl;
     }
 }
 
