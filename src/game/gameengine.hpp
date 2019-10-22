@@ -51,6 +51,7 @@ private:
 
     Shader TriangleShader;
     Shader GeometryShader;
+    Shader MapShader;
 
     MeshObject BoxSelectionVAO;
 };

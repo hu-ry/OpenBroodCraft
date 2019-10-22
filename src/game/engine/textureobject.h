@@ -26,7 +26,7 @@ public:
 
     TextureObject(const char* texturePath) {
         this->texturePath = texturePath;
-
+        std::cout << "texturePath: " << texturePath << std::endl;
         glGenTextures(1, &ID);
 
         int width, height, nrChannels;

@@ -21,13 +21,12 @@ public:
     std::vector<glm::vec3> vertices;
     std::vector<TextureObject> textures;
     int sizeArray;
+    int instanceSize;
 
     MeshObject() = default;
 
-    MeshObject(const char* objectdataPath, GLenum bufferusage, bool useInstancing, std::vector<TextureObject> _textures) {
-        this->textures = _textures;
-        this->instanceSize = 0;
-        sizeArray = 0;
+    MeshObject(const char* objectdataPath, GLenum bufferusage, bool useInstancing, std::vector<TextureObject> _textures)
+    : instanceSize(0), sizeArray(0), textures(_textures) {
 
         std::string verticesData = readVerticesf(objectdataPath, &sizeArray);
 
@@ -139,7 +138,8 @@ public:
         }
         // start drawing the mesh
         glBindVertexArray(VAO_ID);
-        glDrawArraysInstanced(GL_TRIANGLES, 0, (int)sizeArray/5, instanceSize);
+        std::cout << this->instanceSize << std::endl;
+        glDrawArraysInstanced(GL_TRIANGLES, 0, (int)sizeArray/5, this->instanceSize);
 
         glBindVertexArray(0);
 
@@ -152,8 +152,8 @@ public:
         glBindVertexArray(0);
     }
 
-    void initInstancing(glm::vec2 translations[MAX_MAP_SIZE], const unsigned int &size) {
-        instanceSize = size;
+    void initInstancing(glm::vec2 translations[MAX_MAP_SIZE], unsigned int size) {
+        this->instanceSize = size;
         glGenBuffers(1, &instanceVBO);
         glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
         if(size != MAX_MAP_SIZE) {
@@ -172,6 +172,7 @@ public:
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glVertexAttribDivisor(2, 1);
         unbindVertexArray();
+        std::cout << this->instanceSize << std::endl;
     }
 
     void unbindVertexArray() {
@@ -191,7 +192,7 @@ public:
 private:
     unsigned int VBO;
     unsigned int instanceVBO;
-    int instanceSize;
+
 
 
     std::string readVerticesf(const char* objectdataPath, int* sizeArray) {

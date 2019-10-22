@@ -13,7 +13,7 @@ class MeshFactory {
 public:
     MeshFactory(const std::string &pathTextures, const std::string &pathModel);
 
-    void createMapMesh(GameMap t_map);
+    void createMapMesh(GameMap* t_map);
 
     MeshObject createGeometryMesh();
     MeshObject createUnitMesh();

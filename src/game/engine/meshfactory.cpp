@@ -11,17 +11,27 @@ MeshFactory::MeshFactory(const std::string &pathTextures, const std::string &pat
 }
 
 
-void MeshFactory::createMapMesh(GameMap t_map) {
-    for (unsigned int i = 0; i < (unsigned int)t_map.getMapTile().size(); ++i) {
+void MeshFactory::createMapMesh(GameMap* t_map) {
+    for (unsigned int i = 0; i < (unsigned int)t_map->getMapTile().size(); ++i) {
         std::string temp = path_to_map_textures;
-        std::vector<TextureObject> maptile_texture = {
-                TextureObject( (path_to_map_textures.append(t_map.getMapTile().at(i).file_name)).c_str() )
-        };
-        path_to_map_textures = temp;
-        t_map.getMapTile().at(i).mesh = MeshObject("../objectmodels/testTile.vmo", GL_STATIC_DRAW, true, maptile_texture);
-        t_map.getMapTile().at(i).mesh.initInstancing(
-                t_map.getMapTile().at(i).offsets.data,
-                t_map.getMapTile().at(i).offsets.size );
+
+        std::vector<TextureObject> test;
+        test.push_back( TextureObject(temp.append(t_map->getMapTile().at(i).file_name).c_str()) );
+        MeshObject meshtest = MeshObject("../objectmodels/testTile.vmo", GL_STATIC_DRAW, true, test);
+        meshtest.instanceSize = t_map->getMapTile().at(i).offset_amount;
+        t_map->push_mesh(meshtest);
+        glm::vec2 translations[MAX_MAP_SIZE];
+        int count_trans = 0;
+        for(int k = 0; k < t_map->getMapSize(); k++) {
+            // comparing if the pointers are the same
+            if( t_map->getEntitiesPtr()[k].tile->id == (t_map->getMapTile().at(i)).id ) {
+                translations[count_trans] = t_map->getEntitiesPtr()[k].offset;
+                count_trans++;
+            }
+        }
+        t_map->getMesh(i).initInstancing(
+                translations,
+                t_map->getMapTile().at(i).offset_amount );
     }
 }
 

@@ -16,22 +16,18 @@ enum Orientation{
     TOP_DOWN
 };
 
-typedef struct{
-    unsigned int size = 0;
-    glm::vec2 data[MAX_MAP_SIZE];
-} vec2_4096_t;
 
 typedef struct{
     unsigned int id;
     std::string file_name;
     std::string type;
-    MeshObject mesh;
-    vec2_4096_t offsets;
+    unsigned int offset_amount;
     Orientation alignment;
 } map_tile;
 
 typedef struct{
     unsigned int index;
+    glm::vec2 offset;
     map_tile* tile;
 } tile_entity;
 

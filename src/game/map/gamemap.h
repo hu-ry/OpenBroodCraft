@@ -12,13 +12,19 @@ class GameMap {
 public:
     GameMap(const char* mapdataPath);
 
-    void draw(glm::mat4* _model, Shader* _shader);
+    GameMap() = default;
 
+    void draw(glm::mat4* _projection, glm::mat4* _view, glm::mat4* _model, Shader* _shader);
+
+    void push_mesh(MeshObject to_add);
 
     unsigned int getMapSize();
     std::string getMapName();
     std::string getMapVersion();
     std::vector<map_tile> getMapTile();
+    tile_entity* getEntitiesPtr();
+    MeshObject getMesh(int index);
+
 
     void deallocateMesh();
 private:
@@ -28,6 +34,7 @@ private:
     unsigned int map_size;
 
     std::vector<map_tile> mapTile;
+    std::vector<MeshObject> meshes;
     tile_entity tiles[MAX_MAP_SIZE];
 
     void parseJSON(const char* mapdataPath);

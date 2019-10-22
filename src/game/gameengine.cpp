@@ -7,8 +7,8 @@
 #include "engine/meshfactory.h"
 
 
-GameEngine::GameEngine() : TriangleShader(), GeometryShader(),
-camera(INITIAL_CAM_POSITION), map_to_draw(GameMap("../maps/test_map.json")) {
+GameEngine::GameEngine() : TriangleShader(), GeometryShader(), MapShader(),
+camera(INITIAL_CAM_POSITION), map_to_draw() {
 
     //TODO: Write some useful stuff in here pls
     this->gamedata = KernelStore{
@@ -20,7 +20,7 @@ camera(INITIAL_CAM_POSITION), map_to_draw(GameMap("../maps/test_map.json")) {
 }
 
 void GameEngine::Init() {
-
+    std::cout << "-----Starting GameEngine Init!-----" << std::endl;
     // configure global opengl state
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
@@ -31,12 +31,13 @@ void GameEngine::Init() {
             "../shaders/testTriShader.frsh");
     this->GeometryShader = Shader("../shaders/testGeoShader.vesh",
             "../shaders/testGeoShader.frsh", "../shaders/testGeoShader.gesh");
+    this->MapShader = Shader("../shaders/map_shader.vesh", "../shaders/map_shader.frsh");
 
     MeshFactory meshMaker("../textures/", "../objectmodels/");
 
-    //GameMap testingGameMap("../maps/test_map.json");
+    this->map_to_draw = GameMap("../maps/test_map.json");
 
-    meshMaker.createMapMesh(map_to_draw);
+    meshMaker.createMapMesh(&map_to_draw);
     this->BoxSelectionVAO = meshMaker.createGeometryMesh();
 
     std::vector<TextureObject> maptile_texture = {TextureObject("../textures/maptiles/64px_cobblestone_tile.png")};
@@ -55,9 +56,11 @@ void GameEngine::Init() {
 
     // uncomment this call to draw in wireframe polygons.
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    std::cout << "-----FINISHED GameEngine INIT!-----" << std::endl;
 }
 
 void GameEngine::execute() {
+    std::cout << "-----STARTING GameEngine RENDER!-----" << std::endl;
     /* render happens here */
     glClearColor(0.2f, 0.5f, 0.6f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -75,7 +78,7 @@ void GameEngine::execute() {
     TriangleShader.setMatrix4fv("projection", 1, projection);
  
     // drawing the GameMap
-    map_to_draw.draw(&model, &TriangleShader);
+    map_to_draw.draw(&projection, &view, &model, &MapShader);
 
     // drawing all TexEntities
     if(this->Current_Unit != 0) {
@@ -103,6 +106,7 @@ void GameEngine::execute() {
         this->BoxSelectionVAO.drawGeoBox(GeometryShader);
         this->gamedata.flags.inBoxSelection = false;
     }
+    std::cout << "-----FINISHED GameEngine RENDER!-----" << std::endl;
 }
 
 void GameEngine::processGamelogic() {

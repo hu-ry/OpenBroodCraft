@@ -15,18 +15,24 @@ GameMap::GameMap(const char* mapdataPath) {
 
 
 
-void GameMap::draw(glm::mat4* _model, Shader* _shader) {
+void GameMap::draw(glm::mat4* _projection, glm::mat4* _view, glm::mat4* _model, Shader* _shader) {
+    _shader->use();
+    _shader->setMatrix4fv("projection", 1, *_projection);
+    _shader->setMatrix4fv("view", 1, *_view);
  //TODO: Goes through all the map_tile's in mapTile and uses the mesh and the offsets to draw the instanced meshes
     glm::mat4 temp_model = *_model;
-    *_model = glm::translate(*_model,
-            glm::vec3(0, 0, WORLD_BORDER_Z));
+    *_model = glm::translate(*_model, glm::vec3(0, 0, WORLD_BORDER_Z));
     _shader->setMatrix4fv("model", 1, *_model);
 
     for (unsigned int i = 0; i < this->getMapTile().size(); ++i) {
-        this->getMapTile().at(i).mesh.drawInstanced(*_shader);
-        std::cout << "textures: " << this->getMapTile().at(i).mesh.VAO_ID << std::endl;
+        this->meshes.at(i).drawInstanced(*_shader);
+        std::cout << "textures: " << this->meshes.at(i).VAO_ID << std::endl;
     }
     *_model = temp_model;
+}
+
+void GameMap::push_mesh(MeshObject to_add) {
+    this->meshes.push_back(to_add);
 }
 
 void GameMap::parseJSON(const char* mapdataPath) {
@@ -70,15 +76,21 @@ void GameMap::parseJSON(const char* mapdataPath) {
         this->mapTile.push_back(map_tile{.id = (unsigned int)currentTile.value("id", 0),
                                          .file_name = currentTile.value("file_name", ""),
                                          .type = currentTile.value("type", "None"),
-                                         .alignment = (Orientation)currentTile.value("alignment", 0)});
+                                         .offset_amount = 0,
+                                         .alignment = (Orientation)currentTile.value("alignment", 0)
+        });
         std::cout << "map_tile_data: " << this->mapTile.at(i).file_name << "\n" << std::endl;
     }
     map_tile_data = jsonData.at("tiles");
 
     json::iterator it = map_tile_data.begin();
     for(unsigned int i=0; i < map_size; i++) {
-
-        this->tiles[i] = tile_entity{.index = i, .tile = &this->mapTile.at((unsigned int)*it)};
+        for(int k=0; k <= max_i; k++) {
+            if(k == *it) {
+                this->mapTile.at(k).offset_amount++;
+            }
+        }
+        this->tiles[i] = tile_entity{.index = i, .offset = glm::vec2(0, 0), .tile = &this->mapTile.at((unsigned int)*it)};
         ++it;
     }
 
@@ -91,13 +103,11 @@ float y_start = ((float)map_dimensions[1]/2)*TILE_SIZE-(TILE_SIZE/2);
     for(int i=0; i < map_size; i++) {
         int x_pos = (i % map_dimensions[0]);
         int y_pos = (i - (i % map_dimensions[0])) / map_dimensions[0];
-        tiles[i].tile->offsets.data[tiles[i].tile->offsets.size] = glm::vec2(
+        tiles[i].offset = glm::vec2(
                 (x_start + x_pos*TILE_SIZE)/FROSTUM_WIDTH,
                 ((y_start - y_pos*TILE_SIZE)/FROSTUM_HEIGHT)-1.5f );
 
-        std::cout << "x: " << tiles[i].tile->offsets.data[tiles[i].tile->offsets.size].x <<
-        " y: " << tiles[i].tile->offsets.data[tiles[i].tile->offsets.size].y << std::endl;
-        tiles[i].tile->offsets.size++;
+        std::cout << "x: " << tiles[i].offset.x << " y: " << tiles[i].offset.y << std::endl;
     }
 
 }
@@ -118,8 +128,18 @@ std::vector<map_tile> GameMap::getMapTile() {
     return this->mapTile;
 }
 
+tile_entity* GameMap::getEntitiesPtr() {
+    return &this->tiles[0];
+}
+
+MeshObject GameMap::getMesh(int index) {
+    return this->meshes[index];
+}
+
+
+
 void GameMap::deallocateMesh() {
     for (unsigned int i = 0; i < (unsigned int)this->getMapTile().size(); ++i) {
-        this->getMapTile().at(i).mesh.deallocateVertexArrays();
+        this->meshes.at(i).deallocateVertexArrays();
     }
 }
