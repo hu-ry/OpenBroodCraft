@@ -3,7 +3,6 @@
 //
 
 #include "gameengine.hpp"
-#include "../main.h"
 #include "engine/meshfactory.h"
 
 

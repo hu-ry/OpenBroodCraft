@@ -19,7 +19,6 @@ void GameMap::draw(glm::mat4* _projection, glm::mat4* _view, glm::mat4* _model, 
     _shader->use();
     _shader->setMatrix4fv("projection", 1, *_projection);
     _shader->setMatrix4fv("view", 1, *_view);
- //TODO: Goes through all the map_tile's in mapTile and uses the mesh and the offsets to draw the instanced meshes
     glm::mat4 temp_model = *_model;
 
     _shader->setMatrix4fv("model", 1, *_model);
@@ -97,9 +96,9 @@ void GameMap::parseJSON(const char* mapdataPath) {
 }
 
 void GameMap::preparing_map() {
-float x_start = -(((float)map_dimensions[0]/2)*TILE_SIZE)-(TILE_SIZE/2);
+float x_start = -(((float)map_dimensions[0]/2)*TILE_SIZE)+(TILE_SIZE/2);
 float y_start = ((float)map_dimensions[1]/2)*TILE_SIZE-(TILE_SIZE/2);
-
+//TODO(rh): Implement creating the spatial map grid for faster unit selection and faster work with units in general
     for(int i=0; i < map_size; i++) {
         int x_pos = (i % map_dimensions[0]);
         int y_pos = (i - (i % map_dimensions[0])) / map_dimensions[0];

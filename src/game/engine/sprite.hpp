@@ -1,0 +1,8 @@
+//
+// Created by Guest on 11/11/2019.
+//
+
+#ifndef OPENBROODCRAFT_SPRITE_HPP
+#define OPENBROODCRAFT_SPRITE_HPP
+
+#endif //OPENBROODCRAFT_SPRITE_HPP

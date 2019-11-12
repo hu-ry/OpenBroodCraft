@@ -7,7 +7,8 @@
 
 
 class Player {
-
+public:
+    //TODO: https://stackoverflow.com/questions/3537278/fast-algorithm-for-line-of-sight-calculation-in-an-rts-game
 };
 
 

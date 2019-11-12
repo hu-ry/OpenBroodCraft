@@ -5,6 +5,7 @@
 #ifndef OPENBROODCRAFT_MAP_H
 #define OPENBROODCRAFT_MAP_H
 
+#include <map>
 #include "map_tile.h"
 
 
@@ -32,6 +33,8 @@ private:
     std::string map_version;
     unsigned int map_dimensions[2];
     unsigned int map_size;
+
+    std::map<cell_id, cell> map_grid;
 
     std::vector<map_tile> mapTile;
     std::vector<MeshObject> meshes;

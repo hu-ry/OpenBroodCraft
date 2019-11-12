@@ -31,4 +31,12 @@ typedef struct{
     map_tile* tile;
 } tile_entity;
 
+typedef struct{
+    glm::vec2 start;
+    glm::vec2 end;
+    std::vector<EntityID> entities;
+} cell;
+
+typedef uint64_t cell_id;
+
 #endif //OPENBROODCRAFT_MAP_TILE_H

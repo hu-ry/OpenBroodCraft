@@ -10,7 +10,6 @@
 #include "unit.h"
 #include "../globalvar.h"
 #include "engine/camera.h"
-#include "map/map_tiles.h"
 #include "kernelstore.h"
 #include "map/gamemap.h"
 
