@@ -9,13 +9,6 @@
 #include "../../globalvar.h"
 #include "../../headerinclude.h"
 
-enum Orientation{
-    TOP_UP = 0,
-    TOP_RIGHT,
-    TOP_LEFT,
-    TOP_DOWN
-};
-
 
 typedef struct{
     unsigned int id;

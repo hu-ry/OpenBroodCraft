@@ -16,7 +16,12 @@ void MeshFactory::createMapMesh(GameMap* t_map) {
         std::string temp = path_to_map_textures;
 
         std::vector<TextureObject> test;
-        test.push_back( TextureObject(temp.append(t_map->getMapTile().at(i).file_name).c_str()) );
+        test.push_back(
+                TextureObject(
+                        temp.append(t_map->getMapTile().at(i).file_name).c_str(),
+                        t_map->getMapTile().at(i).alignment
+                        )
+                );
         MeshObject meshtest = MeshObject("../objectmodels/testTile.vmo", GL_STATIC_DRAW, true, test);
         t_map->push_mesh(meshtest);
         glm::vec2 translations[MAX_MAP_SIZE];

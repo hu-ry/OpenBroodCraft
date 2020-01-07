@@ -34,7 +34,7 @@ private:
     unsigned int map_dimensions[2];
     unsigned int map_size;
 
-    std::map<cell_id, cell> map_grid;
+    std::map<cell_id, cell> cell_grid;
 
     std::vector<map_tile> mapTile;
     std::vector<MeshObject> meshes;
