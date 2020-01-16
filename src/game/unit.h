@@ -7,7 +7,7 @@
 
 
 #include "../globalvar.h"
-#include "command.h"
+#include "../input/command.h"
 #include "texentity.h"
 
 enum UnitType {
@@ -29,9 +29,9 @@ public:
 
     glm::vec3 translate = glm::vec3(0.0f, 0.0f, 1.0f);
 
-    Unit(MeshObject* mesh, UnitType type, glm::vec3 WorldSpacePos, Command cmd, unsigned int speed);
+    Unit(MeshObject* mesh, UnitType type, glm::vec3 WorldSpacePos, unsigned int speed);
 
-    Unit(MeshObject* mesh, UnitType type, glm::vec3 WorldSpacePos, Command cmd);
+    Unit(MeshObject* mesh, UnitType type, glm::vec3 WorldSpacePos);
 
     Unit();
 
@@ -44,7 +44,6 @@ public:
 
 private:
 
-    Command CmdOrder;
 
     glm::vec2 MoveVec = glm::vec2(0.0f, 0.0f);
 
