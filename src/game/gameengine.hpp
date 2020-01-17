@@ -1,5 +1,5 @@
 //
-// Created by Guest on 29/08/2019.
+// Created by RH on 29/08/2019.
 //
 
 #ifndef OPENBROODCRAFT_GAMEENGINE_H

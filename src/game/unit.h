@@ -21,6 +21,14 @@ enum UnitType {
     UNIT_PROBE
 };
 
+enum UnitOrder {
+    ORDER_NONE = -1,
+    ORDER_HOLD,
+    ORDER_MOVE,
+    ORDER_PATROL,
+    ORDER_ATTACK
+};
+
 class Unit : public TexEntity {
 public:
     UnitType Type_ID;
@@ -29,21 +37,21 @@ public:
 
     glm::vec3 translate = glm::vec3(0.0f, 0.0f, 1.0f);
 
-    Unit(MeshObject* mesh, UnitType type, glm::vec3 WorldSpacePos, unsigned int speed);
+    Unit(MeshObject* mesh, UnitType type, glm::vec3 WorldSpacePos, UnitOrder unitOrder, unsigned int speed);
 
-    Unit(MeshObject* mesh, UnitType type, glm::vec3 WorldSpacePos);
+    Unit(MeshObject* mesh, UnitType type, glm::vec3 WorldSpacePos, UnitOrder unitOrder);
 
     Unit();
 
     void Run();
 
-    void processCommand();
+    void processOrder();
 
     void issueCmd(CommandType type, glm::vec2 dest);
 
 
 private:
-
+    UnitOrder unitOrder;
 
     glm::vec2 MoveVec = glm::vec2(0.0f, 0.0f);
 

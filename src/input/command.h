@@ -1,5 +1,5 @@
 //
-// Created by Guest on 20/09/2019.
+// Created by RH on 20/09/2019.
 //
 
 #ifndef OPENBROODCRAFT_COMMAND_H
@@ -40,17 +40,13 @@ public:
     //glm::vec2 Destination;
 };
 
-class MoveCommand : public Command
-{
+class MoveCommand : public Command {
 public:
-    MoveCommand(glm::vec2 startPos, glm::vec2 destination)
-    : StartPos(startPos),
-      Destination(destination){}
+    MoveCommand(glm::vec2 destination) : Destination(destination){}
 
     virtual void execute() { /* TODO: insert functionality */ }
 
 private:
-    glm::vec2 StartPos;
     glm::vec2 Destination;
 };
 
