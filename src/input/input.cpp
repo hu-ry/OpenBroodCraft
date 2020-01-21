@@ -6,6 +6,7 @@
 
 MouseStatus msStatus;
 GameEngine* gameProg;
+InputAgent* ioAgent;
 
 float relative_world_msPosX;
 float relative_world_msPosY;
@@ -13,8 +14,9 @@ float last_relative_world_msPosX;
 float last_relative_world_msPosY;
 
 
-void initMouse(GameEngine *gameprog) {
-    gameProg = gameprog;
+void initMouse(GameEngine *_gameprog, InputAgent *_ioAgent) {
+    gameProg = _gameprog;
+    ioAgent = _ioAgent;
     msStatus.msPosX = 0;
     msStatus.msPosY = 0;
     msStatus.msLastPosX = 0;

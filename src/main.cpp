@@ -14,7 +14,7 @@
 #include "libs/stb_image.h"
 #include "main.h"
 #include "globalvar.h"
-
+#include "input/inputAgent.h"
 
 
 int main(void) {
@@ -38,9 +38,10 @@ int main(void) {
     }
     //Create GameEngine
     GameEngine gameprog;
+    InputAgent ioagent;
 
     //initialize Input
-    initMouse(&gameprog);
+    initMouse(&gameprog, &ioagent);
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);

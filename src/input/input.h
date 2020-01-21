@@ -1,5 +1,5 @@
 //
-// Created by Guest on 27/08/2019.
+// Created by RH on 27/08/2019.
 //
 
 #ifndef OPENBROODCRAFT_INPUT_H
@@ -14,9 +14,10 @@
 #include <iostream>
 #include "../globalvar.h"
 #include "../game/gameengine.hpp"
+#include "inputAgent.h"
 
 
-void initMouse(GameEngine *gameprog);
+void initMouse(GameEngine *_gameprog, InputAgent *_ioAgent);
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 

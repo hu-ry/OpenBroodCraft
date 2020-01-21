@@ -42,7 +42,7 @@ public:
 
 class MoveCommand : public Command {
 public:
-    MoveCommand(glm::vec2 destination) : Destination(destination){}
+    MoveCommand(float x, float y) : Destination( glm::vec2(x,y) ){}
 
     virtual void execute() { /* TODO: insert functionality */ }
 
