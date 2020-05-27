@@ -2,8 +2,8 @@
 // Created by RH on 29/08/2019.
 //
 
-#include "gameengine.hpp"
-#include "engine/meshfactory.h"
+#include <game/gameengine.hpp>
+#include <game/engine/meshfactory.h>
 
 
 GameEngine::GameEngine() : TriangleShader(), GeometryShader(), MapShader(),
@@ -44,7 +44,7 @@ void GameEngine::Init() {
     // set up vertex data (and buffer(s)) and configure vertex attributes
     MeshObject marinetileVAO("../objectmodels/marineTile.vmo", GL_STATIC_DRAW, false, marine_texture);
 
-    this->addUnit(Unit(&marinetileVAO, UNIT_MARINE, glm::vec3(0.0f, 0.0f, 1.0f), 2));
+    this->addUnit(Unit(&marinetileVAO, UNIT_MARINE, glm::vec3(0.0f, 0.0f, 1.0f), ORDER_NONE, 2));
 
 
 

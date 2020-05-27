@@ -36,24 +36,22 @@ int main(void) {
         glfwTerminate();
         return -1;
     }
+
     //Create GameEngine
     GameEngine gameprog;
-    InputAgent ioagent;
+    InputAgent ioagent(window, &gameprog);
 
     //initialize Input
-    initMouse(&gameprog, &ioagent);
+    initInput(&ioagent);
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+    /* Set callback for all the input functions*/
     glfwSetScrollCallback(window, scroll_callback);
-
     glfwSetMouseButtonCallback(window, mouse_button_callback);
-
     glfwSetCursorPosCallback(window, cursor_position_callback);
-    //---- uncomment to enable camera pitch and yaw for mousemovement ------
-    //glfwSetCursorPosCallback(window, msInput.mouse_callback);
-    //----------------------------------------------------------------------
 
     // tell GLFW to capture our mouse
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR);
@@ -68,8 +66,8 @@ int main(void) {
     gameprog.Init();
 
     // render loop
-    while (!glfwWindowShouldClose(window))
-    {
+    while (!glfwWindowShouldClose(window)) {
+
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;

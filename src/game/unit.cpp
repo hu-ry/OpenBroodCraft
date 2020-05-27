@@ -2,7 +2,7 @@
 // Created by RH on 27/08/2019.
 //
 
-#include "unit.h"
+#include <game/unit.h>
 
 
 
@@ -32,24 +32,24 @@ void Unit::Run() {
 }
 
 void Unit::processOrder() {
-   // if(CmdOrder.Type > 0) {
-   //     if(((WorldSpacePos.x >= CmdOrder.Destination.x && MoveVec.x >= 0)
-   //     || (WorldSpacePos.x <= CmdOrder.Destination.x && MoveVec.x <= 0))
-   //     && ((WorldSpacePos.y >= CmdOrder.Destination.y && MoveVec.y >= 0)
-   //     || (WorldSpacePos.y <= CmdOrder.Destination.y && MoveVec.y <= 0)))
-   //     {
-   //         this->setPosition(glm::vec3(CmdOrder.Destination.x, CmdOrder.Destination.y, WorldSpacePos.z));
-   //         this->CmdOrder.Type = COMMAND_NONE;
-   //     } else {
-   //         this->setPosition(this->WorldSpacePos + glm::vec3(this->MoveVec * this->getMovementSpeed(), 0.0f));
-   //     }
-            translate = WorldSpacePos;
-   // }
+    if(CmdOrder._Type > 0) {
+        if(((WorldSpacePos.x >= CmdOrder.Destination.x && MoveVec.x >= 0)
+        || (WorldSpacePos.x <= CmdOrder.Destination.x && MoveVec.x <= 0))
+        && ((WorldSpacePos.y >= CmdOrder.Destination.y && MoveVec.y >= 0)
+        || (WorldSpacePos.y <= CmdOrder.Destination.y && MoveVec.y <= 0)))
+        {
+            this->setPosition(glm::vec3(CmdOrder.Destination.x, CmdOrder.Destination.y, WorldSpacePos.z));
+            this->CmdOrder._Type = COMMAND_NONE;
+        } else {
+            this->setPosition(this->WorldSpacePos + glm::vec3(this->MoveVec * this->getMovementSpeed(), 0.0f));
+        }
+          translate = WorldSpacePos;
+    }
 }
 
-void Unit::issueCmd(CommandType type, glm::vec2 dest) {
+void Unit::issueCmd(OrderType type, glm::vec2 dest) {
     if(dest.x != getPosition().x && dest.y != getPosition().y) {
-        this->CmdOrder = Command(COMMAND_MOVE, glm::vec2(getPosition().x, getPosition().y), dest);
+        this->CmdOrder = Order(COMMAND_MOVE, glm::vec2(getPosition().x, getPosition().y), dest);
         this->MoveVec = glm::normalize(CmdOrder.Destination - CmdOrder.StartPos);
     }
 }

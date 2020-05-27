@@ -2,8 +2,8 @@
 // Created by RH on 11/10/2019.
 //
 
-#include "gamemap.h"
-#include "../../libs/json.hpp"
+#include "game/map/gamemap.h"
+#include "libs/json.hpp"
 
 // for convenience
 using json = nlohmann::json;

@@ -5,19 +5,12 @@
 #ifndef OPENBROODCRAFT_INPUT_H
 #define OPENBROODCRAFT_INPUT_H
 
-#include <glad/glad.h>
-
-#include <GLFW/glfw3.h>
-#include <glm/vec4.hpp>
-
-#include "../game/engine/camera.h"
 #include <iostream>
-#include "../globalvar.h"
-#include "../game/gameengine.hpp"
+
 #include "inputAgent.h"
 
 
-void initMouse(GameEngine *_gameprog, InputAgent *_ioAgent);
+void initInput(InputAgent *_ioAgent);
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 

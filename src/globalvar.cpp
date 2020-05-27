@@ -1,4 +1,4 @@
-#include "globalvar.h"
+#include "../include/globalvar.h"
 
 
 unsigned int SCR_WIDTH      = 1280;
