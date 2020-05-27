@@ -6,9 +6,9 @@
 #define OPENBROODCRAFT_UNIT_H
 
 
-#include "../globalvar.h"
-#include "../input/command.h"
+#include <globalvar.h>
 #include "texentity.h"
+#include "order.h"
 
 enum UnitType {
     UNIT_NONE = -1,
@@ -47,11 +47,12 @@ public:
 
     void processOrder();
 
-    void issueCmd(CommandType type, glm::vec2 dest);
+    void issueCmd(OrderType type, glm::vec2 dest);
 
 
 private:
     UnitOrder unitOrder;
+    Order CmdOrder;
 
     glm::vec2 MoveVec = glm::vec2(0.0f, 0.0f);
 

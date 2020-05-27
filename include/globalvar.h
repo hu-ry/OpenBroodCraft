@@ -48,12 +48,25 @@ enum ProgMode {
 extern ProgMode PROGRAM_MODE;
 
 struct MouseStatus {
-    int msPosX;
-    int msPosY;
-    int msLastPosX;
-    int msLastPosY;
+    double msPosX;
+    double msPosY;
+    double msLastPosX;
+    double msLastPosY;
     int button;
     int action;
+
+    void initStatus() {
+        msPosX = 0;
+        msPosY = 0;
+        msLastPosX = 0;
+        msLastPosY = 0;
+        button = -1;
+        action = -1;
+    }
+    void updateMousePos(double xPosRaw, double yPosRaw) {
+        msPosX = (int) xPosRaw;
+        msPosY = (int) yPosRaw;
+    }
 };
 
 typedef uint64_t EntityID;

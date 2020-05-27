@@ -2,7 +2,7 @@
 // Created by RH on 14/10/2019.
 //
 
-#include "meshfactory.h"
+#include "../../../include/game/engine/meshfactory.h"
 
 
 MeshFactory::MeshFactory(const std::string &pathTextures, const std::string &pathModel) {
