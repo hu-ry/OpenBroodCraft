@@ -137,6 +137,12 @@ void GameEngine::moveSelectedUnits(float posX, float posY) {
 void GameEngine::selectBoxing(float startPosX, float startPosY, float endPosX, float endPosY) {
     this->gamedata.flags.abortBoxSelection = false;
     this->gamedata.flags.inBoxSelection = true;
+
+    startPosX = (startPosX - ((float)SCR_WIDTH / 2)) / ((float)SCR_WIDTH / 2);
+    startPosY = (-(startPosY - ((float)SCR_HEIGHT / 2))) / ((float)SCR_HEIGHT / 2);
+    endPosX = (endPosX - ((float)SCR_WIDTH / 2)) / ((float)SCR_WIDTH / 2);
+    endPosY = (-(endPosY - ((float)SCR_HEIGHT / 2))) / ((float)SCR_HEIGHT / 2);
+
     std::cout << "startX: " << startPosX << std::endl;
     std::cout << "startY: " << startPosY << std::endl;
     std::cout << "endX: " << endPosX << std::endl;

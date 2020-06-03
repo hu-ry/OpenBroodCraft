@@ -55,7 +55,7 @@ struct MouseStatus {
     int button;
     int action;
 
-    void initStatus() {
+    inline void initStatus() {
         msPosX = 0;
         msPosY = 0;
         msLastPosX = 0;
@@ -63,7 +63,7 @@ struct MouseStatus {
         button = -1;
         action = -1;
     }
-    void updateMousePos(double xPosRaw, double yPosRaw) {
+    inline void updateMousePos(double xPosRaw, double yPosRaw) {
         msPosX = (int) xPosRaw;
         msPosY = (int) yPosRaw;
     }

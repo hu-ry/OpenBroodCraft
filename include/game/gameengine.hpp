@@ -8,7 +8,7 @@
 
 #include <unordered_map>
 #include "unit.h"
-#include "../globalvar.h"
+#include "globalvar.h"
 #include "engine/camera.h"
 #include "kernelstore.h"
 #include "map/gamemap.h"

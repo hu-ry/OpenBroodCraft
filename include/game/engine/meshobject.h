@@ -26,7 +26,7 @@ public:
     MeshObject() = default;
 
     MeshObject(const char* objectdataPath, GLenum bufferusage, bool useInstancing, std::vector<TextureObject> _textures)
-    : instanceSize(0), sizeArray(0), textures(_textures) {
+    : textures(_textures), sizeArray(0), instanceSize(0) {
 
         std::string verticesData = readVerticesf(objectdataPath, &sizeArray);
 

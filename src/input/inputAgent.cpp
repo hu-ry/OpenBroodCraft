@@ -4,7 +4,7 @@
 #include "input/inputAgent.h"
 
 
-InputAgent::InputAgent(GLFWwindow* t_window, GameEngine* t_game) : _Window(t_window), _Game(t_game){
+InputAgent::InputAgent(GLFWwindow* t_window, GameEngine* t_game) : _Game(t_game), _Window(t_window) {
 
     _KeyESC = new CMD_Quit(t_window);
 
@@ -15,6 +15,7 @@ InputAgent::InputAgent(GLFWwindow* t_window, GameEngine* t_game) : _Window(t_win
 
     _KeyE = new CMD_MoveTestUnit(t_game, &relative_world_msPosX, &relative_world_msPosY);
 
+    _MouseLeft = new CMD_BoxSelect(t_game, &_msStatus.msPosX, &_msStatus.msPosY, &_msStatus.msLastPosX, &_msStatus.msLastPosY);
     _MouseScroll = new CMD_ZoomMap(t_game, &scrollOffset);
     
 }
@@ -59,11 +60,7 @@ void InputAgent::handleInput() {
         _KeyE->execute();
     }
     if(_msStatus.button == GLFW_MOUSE_BUTTON_LEFT && _msStatus.action == GLFW_PRESS) {
-        _Game->selectBoxing(
-                ((float)_msStatus.msLastPosX - ((float)SCR_WIDTH / 2)) / (SCR_WIDTH / 2),
-                (-((float)_msStatus.msLastPosY - ((float)SCR_HEIGHT / 2))) / (SCR_HEIGHT / 2),
-                ((float)_msStatus.msPosX - ((float)SCR_WIDTH / 2)) / (SCR_WIDTH / 2),
-                (-((float)_msStatus.msPosY - ((float)SCR_HEIGHT / 2))) / (SCR_HEIGHT / 2) );
+        _MouseLeft->execute();
     }
 
 }
@@ -78,18 +75,16 @@ void InputAgent::mouseButtonCall(int button, int action) {
     _msStatus.button = button;
     _msStatus.action = action;
     if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
-        //Unit.recieveInput(relative_world_msPosX, relative_world_msPosY);
         std::cout << " button: " << "BUTTON_RIGHT" << " action: " << "PRESS" << std::endl;
     }
     if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE) {
-        _Game->testMoveFirstUnit(relative_world_msPosX, relative_world_msPosY);
+        _KeyE->execute();
         std::cout << " button: " << "BUTTON_RIGHT" << " action: " << "RELEASE" << std::endl;
     }
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
         _msStatus.msLastPosX = _msStatus.msPosX;
         _msStatus.msLastPosY = _msStatus.msPosY;
-        //last_relative_world_msPosX = ((float)_msStatus.msLastPosX-((float)SCR_WIDTH/2))/(FROSTUM_ZOOM/2);
-        //last_relative_world_msPosY = (-((float)_msStatus.msLastPosY-((float)SCR_HEIGHT/2)))/(FROSTUM_ZOOM/2);
+
         std::cout << " button: " << "BUTTON_LEFT" << " action: " << "PRESS" << std::endl;
     }
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {

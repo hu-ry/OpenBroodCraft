@@ -21,6 +21,10 @@ void CMD_ZoomMap::execute() {
     static_cast<GameEngine*>(_Game)->zoomCamera(*_ScrollOffset);
 }
 
+void CMD_BoxSelect::execute() {
+    static_cast<GameEngine*>(_Game)->selectBoxing(*_StartX, *_StartY, *_EndX, *_EndY);
+}
+
 void CMD_MoveTestUnit::execute() {
     static_cast<GameEngine*>(_Game)->testMoveFirstUnit(*_Xpos, *_Ypos);
 }

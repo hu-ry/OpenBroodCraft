@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.12)
 project(OpenBroodCraft)
 
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_FLAGS "-O3 -pthread -fcheck-new ")
 
 include_directories(include)
 

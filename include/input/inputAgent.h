@@ -10,7 +10,6 @@
 #include "game/gameengine.hpp"
 
 #include <GLFW/glfw3.h>
-#include <glm/vec4.hpp>
 
 class InputAgent {
 public:

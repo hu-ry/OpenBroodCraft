@@ -26,7 +26,7 @@ private:
 
 class CMD_MoveCamera : public Command {
 public:
-    CMD_MoveCamera(void *t_game, int t_direction) : _Game(t_game), _Direction(t_direction) {}
+    CMD_MoveCamera(void *t_game, int t_direction) : _Direction(t_direction), _Game(t_game) {}
 
     void execute() override;
 
@@ -43,7 +43,22 @@ public:
 
 private:
     void* _Game;
-    double *_ScrollOffset;
+    double* _ScrollOffset;
+};
+
+class CMD_BoxSelect : public Command {
+public:
+    CMD_BoxSelect(void *t_game, double *t_startx, double *t_starty, double *t_endx, double *t_endy)
+    : _Game(t_game) ,_StartX(t_startx), _StartY(t_starty), _EndX(t_endx), _EndY(t_endy) {}
+
+    void execute() override;
+
+private:
+    void* _Game;
+    double* _StartX;
+    double* _StartY;
+    double* _EndX;
+    double* _EndY;
 };
 
 class CMD_MoveTestUnit : public Command {
